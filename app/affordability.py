@@ -1126,7 +1126,7 @@ with tabs[2]:
     st.markdown("---")
 
     st.markdown("## While rent prices increased, so did incomes —<br>particularly among those in the middle and upper brackets.", unsafe_allow_html=True)
-    st.markdown('<p class="caption">* The income increases need to be adjusted to inflation.</p>', unsafe_allow_html=True)
+    st.markdown('<p class="caption">* The income increases are not adjusted to inflation.</p>', unsafe_allow_html=True)
 
     col1, col2 = st.columns([1,1])
     
