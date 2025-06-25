@@ -1,0 +1,133 @@
+bez_id,bez_name,year,population
+1,Mitte,2013,348102
+2,Friedrichshain-Kreuzberg ,2013,273517
+3,Pankow,2013,377532
+4,Charlottenburg-Wilmersdorf ,2013,322870
+5,Spandau,2013,226868
+6,Steglitz-Zehlendorf ,2013,298200
+7,Tempelhof-Schöneberg ,2013,311822
+8,Neukölln,2013,322153
+9,Treptow-Köpenick ,2013,245951
+10,Marzahn-Hellersdorf ,2013,254226
+11,Lichtenberg ,2013,264858
+12,Reinickendorf ,2013,251235
+1,Mitte,2014,356506
+2,Friedrichshain-Kreuzberg ,2014,275691
+3,Pankow,2014,384367
+4,Charlottenburg-Wilmersdorf ,2014,326354
+5,Spandau,2014,230419
+6,Steglitz-Zehlendorf ,2014,299268
+7,Tempelhof-Schöneberg ,2014,335767
+8,Neukölln,2014,325716
+9,Treptow-Köpenick ,2014,249440
+10,Marzahn-Hellersdorf ,2014,256173
+11,Lichtenberg ,2014,268465
+12,Reinickendorf ,2014,254000
+1,Mitte,2015,363236
+2,Friedrichshain-Kreuzberg ,2015,278393
+3,Pankow,2015,389976
+4,Charlottenburg-Wilmersdorf ,2015,330468
+5,Spandau,2015,234630
+6,Steglitz-Zehlendorf ,2015,299765
+7,Tempelhof-Schöneberg ,2015,341161
+8,Neukölln,2015,328062
+9,Treptow-Köpenick ,2015,253333
+10,Marzahn-Hellersdorf ,2015,259373
+11,Lichtenberg ,2015,275142
+12,Reinickendorf ,2015,256617
+1,Mitte,2016,371407
+2,Friedrichshain-Kreuzberg ,2016,281323
+3,Pankow,2016,397406
+4,Charlottenburg-Wilmersdorf ,2016,336249
+5,Spandau,2016,239942
+6,Steglitz-Zehlendorf ,2016,304086
+7,Tempelhof-Schöneberg ,2016,346108
+8,Neukölln,2016,327522
+9,Treptow-Köpenick ,2016,259524
+10,Marzahn-Hellersdorf ,2016,262015
+11,Lichtenberg ,2016,283121
+12,Reinickendorf ,2016,261919
+1,Mitte,2017,377965
+2,Friedrichshain-Kreuzberg ,2017,283974
+3,Pankow,2017,402289
+4,Charlottenburg-Wilmersdorf ,2017,338831
+5,Spandau,2017,242143
+6,Steglitz-Zehlendorf ,2017,307076
+7,Tempelhof-Schöneberg ,2017,348739
+8,Neukölln,2017,329387
+9,Treptow-Köpenick ,2017,264999
+10,Marzahn-Hellersdorf ,2017,266684
+11,Lichtenberg ,2017,286246
+12,Reinickendorf ,2017,263597
+1,Mitte,2018,383457
+2,Friedrichshain-Kreuzberg ,2018,289120
+3,Pankow,2018,407039
+4,Charlottenburg-Wilmersdorf ,2018,341327
+5,Spandau,2018,243080
+6,Steglitz-Zehlendorf ,2018,308077
+7,Tempelhof-Schöneberg ,2018,351429
+8,Neukölln,2018,330786
+9,Treptow-Köpenick ,2018,269775
+10,Marzahn-Hellersdorf ,2018,268739
+11,Lichtenberg ,2018,290493
+12,Reinickendorf ,2018,264826
+1,Mitte,2019,385748
+2,Friedrichshain-Kreuzberg ,2019,290386
+3,Pankow,2019,409335
+4,Charlottenburg-Wilmersdorf ,2019,343592
+5,Spandau,2019,245197
+6,Steglitz-Zehlendorf ,2019,310071
+7,Tempelhof-Schöneberg ,2019,350984
+8,Neukölln,2019,329917
+9,Treptow-Köpenick ,2019,273689
+10,Marzahn-Hellersdorf ,2019,269967
+11,Lichtenberg ,2019,294201
+12,Reinickendorf ,2019,266408
+1,Mitte,2020,383360
+2,Friedrichshain-Kreuzberg ,2020,289787
+3,Pankow,2020,410716
+4,Charlottenburg-Wilmersdorf ,2020,341392
+5,Spandau,2020,245527
+6,Steglitz-Zehlendorf ,2020,308840
+7,Tempelhof-Schöneberg ,2020,349539
+8,Neukölln,2020,327945
+9,Treptow-Köpenick ,2020,276165
+10,Marzahn-Hellersdorf ,2020,273731
+11,Lichtenberg ,2020,296837
+12,Reinickendorf ,2020,266123
+1,Mitte,2021,385692
+2,Friedrichshain-Kreuzberg ,2021,289014
+3,Pankow,2021,413168
+4,Charlottenburg-Wilmersdorf ,2021,333998
+5,Spandau,2021,247396
+6,Steglitz-Zehlendorf ,2021,307135
+7,Tempelhof-Schöneberg ,2021,348523
+8,Neukölln,2021,327100
+9,Treptow-Köpenick ,2021,280357
+10,Marzahn-Hellersdorf ,2021,277639
+11,Lichtenberg ,2021,299686
+12,Reinickendorf ,2021,265772
+1,Mitte,2022,395599
+2,Friedrichshain-Kreuzberg ,2022,293231
+3,Pankow,2022,420768
+4,Charlottenburg-Wilmersdorf ,2022,341155
+5,Spandau,2022,254175
+6,Steglitz-Zehlendorf ,2022,311040
+7,Tempelhof-Schöneberg ,2022,353913
+8,Neukölln,2022,329476
+9,Treptow-Köpenick ,2022,289180
+10,Marzahn-Hellersdorf ,2022,285678
+11,Lichtenberg ,2022,308286
+12,Reinickendorf ,2022,268308
+1,Mitte,2023,397134
+2,Friedrichshain-Kreuzberg ,2023,293454
+3,Pankow,2023,424307
+4,Charlottenburg-Wilmersdorf ,2023,343081
+5,Spandau,2023,257091
+6,Steglitz-Zehlendorf ,2023,310446
+7,Tempelhof-Schöneberg ,2023,355868
+8,Neukölln,2023,330017
+9,Treptow-Köpenick ,2023,294081
+10,Marzahn-Hellersdorf ,2023,291948
+11,Lichtenberg ,2023,311881
+12,Reinickendorf ,2023,268792

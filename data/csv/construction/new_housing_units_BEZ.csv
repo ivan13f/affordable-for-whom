@@ -1,0 +1,133 @@
+bez_id,bez_name,year,new_housing_units
+1,Mitte,2013,801
+2,Friedrichshain-Kreuzberg ,2013,221
+3,Pankow,2013,820
+4,Charlottenburg-Wilmersdorf ,2013,255
+5,Spandau,2013,269
+6,Steglitz-Zehlendorf ,2013,575
+7,Tempelhof-Schöneberg ,2013,63
+8,Neukölln,2013,101
+9,Treptow-Köpenick ,2013,462
+10,Marzahn-Hellersdorf ,2013,298
+11,Lichtenberg ,2013,581
+12,Reinickendorf ,2013,201
+1,Mitte,2014,1147
+2,Friedrichshain-Kreuzberg ,2014,687
+3,Pankow,2014,1319
+4,Charlottenburg-Wilmersdorf ,2014,545
+5,Spandau,2014,220
+6,Steglitz-Zehlendorf ,2014,370
+7,Tempelhof-Schöneberg ,2014,299
+8,Neukölln,2014,384
+9,Treptow-Köpenick ,2014,885
+10,Marzahn-Hellersdorf ,2014,477
+11,Lichtenberg ,2014,732
+12,Reinickendorf ,2014,234
+1,Mitte,2015,906
+2,Friedrichshain-Kreuzberg ,2015,1609
+3,Pankow,2015,1677
+4,Charlottenburg-Wilmersdorf ,2015,365
+5,Spandau,2015,180
+6,Steglitz-Zehlendorf ,2015,482
+7,Tempelhof-Schöneberg ,2015,322
+8,Neukölln,2015,128
+9,Treptow-Köpenick ,2015,1216
+10,Marzahn-Hellersdorf ,2015,465
+11,Lichtenberg ,2015,1128
+12,Reinickendorf ,2015,253
+1,Mitte,2016,2022
+2,Friedrichshain-Kreuzberg ,2016,801
+3,Pankow,2016,1395
+4,Charlottenburg-Wilmersdorf ,2016,410
+5,Spandau,2016,201
+6,Steglitz-Zehlendorf ,2016,1019
+7,Tempelhof-Schöneberg ,2016,262
+8,Neukölln,2016,296
+9,Treptow-Köpenick ,2016,2252
+10,Marzahn-Hellersdorf ,2016,460
+11,Lichtenberg ,2016,1178
+12,Reinickendorf ,2016,485
+1,Mitte,2017,2104
+2,Friedrichshain-Kreuzberg ,2017,1266
+3,Pankow,2017,1291
+4,Charlottenburg-Wilmersdorf ,2017,573
+5,Spandau,2017,367
+6,Steglitz-Zehlendorf ,2017,613
+7,Tempelhof-Schöneberg ,2017,227
+8,Neukölln,2017,611
+9,Treptow-Köpenick ,2017,1874
+10,Marzahn-Hellersdorf ,2017,1491
+11,Lichtenberg ,2017,2213
+12,Reinickendorf ,2017,184
+1,Mitte,2018,1986
+2,Friedrichshain-Kreuzberg ,2018,1389
+3,Pankow,2018,1636
+4,Charlottenburg-Wilmersdorf ,2018,791
+5,Spandau,2018,1154
+6,Steglitz-Zehlendorf ,2018,526
+7,Tempelhof-Schöneberg ,2018,551
+8,Neukölln,2018,741
+9,Treptow-Köpenick ,2018,2257
+10,Marzahn-Hellersdorf ,2018,1025
+11,Lichtenberg ,2018,2032
+12,Reinickendorf ,2018,375
+1,Mitte,2019,3768
+2,Friedrichshain-Kreuzberg ,2019,823
+3,Pankow,2019,1788
+4,Charlottenburg-Wilmersdorf ,2019,900
+5,Spandau,2019,692
+6,Steglitz-Zehlendorf ,2019,406
+7,Tempelhof-Schöneberg ,2019,693
+8,Neukölln,2019,749
+9,Treptow-Köpenick ,2019,2674
+10,Marzahn-Hellersdorf ,2019,1941
+11,Lichtenberg ,2019,2148
+12,Reinickendorf ,2019,305
+1,Mitte,2020,1666
+2,Friedrichshain-Kreuzberg ,2020,1172
+3,Pankow,2020,1595
+4,Charlottenburg-Wilmersdorf ,2020,1554
+5,Spandau,2020,502
+6,Steglitz-Zehlendorf ,2020,331
+7,Tempelhof-Schöneberg ,2020,859
+8,Neukölln,2020,508
+9,Treptow-Köpenick ,2020,1759
+10,Marzahn-Hellersdorf ,2020,1948
+11,Lichtenberg ,2020,1964
+12,Reinickendorf ,2020,861
+1,Mitte,2021,992
+2,Friedrichshain-Kreuzberg ,2021,565
+3,Pankow,2021,2090
+4,Charlottenburg-Wilmersdorf ,2021,696
+5,Spandau,2021,1622
+6,Steglitz-Zehlendorf ,2021,258
+7,Tempelhof-Schöneberg ,2021,1238
+8,Neukölln,2021,665
+9,Treptow-Köpenick ,2021,2619
+10,Marzahn-Hellersdorf ,2021,1715
+11,Lichtenberg ,2021,1387
+12,Reinickendorf ,2021,586
+1,Mitte,2022,1230
+2,Friedrichshain-Kreuzberg ,2022,595
+3,Pankow,2022,1496
+4,Charlottenburg-Wilmersdorf ,2022,1154
+5,Spandau,2022,1072
+6,Steglitz-Zehlendorf ,2022,584
+7,Tempelhof-Schöneberg ,2022,494
+8,Neukölln,2022,333
+9,Treptow-Köpenick ,2022,3247
+10,Marzahn-Hellersdorf ,2022,2695
+11,Lichtenberg ,2022,1522
+12,Reinickendorf ,2022,982
+1,Mitte,2023,1795
+2,Friedrichshain-Kreuzberg ,2023,565
+3,Pankow,2023,1456
+4,Charlottenburg-Wilmersdorf ,2023,777
+5,Spandau,2023,708
+6,Steglitz-Zehlendorf ,2023,265
+7,Tempelhof-Schöneberg ,2023,622
+8,Neukölln,2023,665
+9,Treptow-Köpenick ,2023,2081
+10,Marzahn-Hellersdorf ,2023,2077
+11,Lichtenberg ,2023,3268
+12,Reinickendorf ,2023,354

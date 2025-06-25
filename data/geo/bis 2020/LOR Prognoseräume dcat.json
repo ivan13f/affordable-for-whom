@@ -1,0 +1,111 @@
+{
+    "dcat:Catalog": {
+        "dct:title": [
+            "Daten"
+        ],
+        "dct:description": [
+            "Offene Daten zur Verfügung gestellt durch die Open Data Informationsstelle (ODIS)"
+        ],
+        "dct:publisher": {
+            "foaf:name": "Technologiestiftung Berlin"
+        },
+        "dct:issued": "2021-09-09",
+        "dcat:dataset": [
+            "https://daten.odis-berlin.de/dataset/lor_prognoseraeume/"
+        ],
+        "dct:isPartOf": [
+            "https://daten.odis-berlin.de"
+        ]
+    },
+    "dcat:Dataset": [
+        {
+            "dct:identifier": [
+                "https://daten.odis-berlin.de/dataset/lor_prognoseraeume/"
+            ],
+            "dct:title": [
+                "Lebensweltlich orientierte Räume (LOR) - Prognoseräume (bis Ende 2020)"
+            ],
+            "dct:description": [
+                "Dargestellt werden die alten, bis Ende 2020 verwendeten, 62 Prognoseräume als Ebene der lebensweltlich orientierten Räume (LOR) mit durchschnittlich etwa 60.000 Einwohnern als Ebene für die teilräumliche Bevölkerungsprognose.  Mehr Infos finden Sie hier: https://www.stadtentwicklung.berlin.de/planen/basisdaten_stadtentwicklung/lor/ <br />Original WFS URL: https://fbinter.stadt-berlin.de/fb/wfs/data/senstadt/s_lor_prog"
+            ],
+            "dcatde:originator": [
+                {
+                    "foaf:name": "Sebastian Meier",
+                    "dct:type": "http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/processor"
+                }
+            ],
+            "dcat:contactPoint": [
+                {
+                    "vcard:fn": "Sebastian Meier",
+                    "vcard:hasEmail": "mailto:meier@technologiestiftung-berlin.de"
+                }
+            ],
+            "dcat:keyword": [
+                
+                "geo",
+                "basisdaten",
+                "polygon",
+                "LOR"
+            ],
+            "dct:spatial": [
+                {
+                    "type": "Polygon",
+                    "crs": "urn:ogc:def:crs:OGC:1.3:CRS84",
+                    "coordinates": [
+                        [
+                            [
+                                13.088347614730992,
+                                52.338245549997296
+                            ],
+                            [
+                                13.761159145035254,
+                                52.338245549997296
+                            ],
+                            [
+                                13.761159145035254,
+                                52.67550765972353
+                            ],
+                            [
+                                13.088347614730992,
+                                52.67550765972353
+                            ],
+                            [
+                                13.088347614730992,
+                                52.338245549997296
+                            ]
+                        ]
+                    ]
+                }
+            ],
+            "dct:temporal": [
+            
+            ],
+            "dct:modified": "2021-09-09",
+            "dcat:distribution": [
+                
+                "https://tsb-opendata.s3.eu-central-1.amazonaws.com/lor_prognoseraeume/lor_prognoseraeume.csv",
+                "https://tsb-opendata.s3.eu-central-1.amazonaws.com/lor_prognoseraeume/lor_prognoseraeume.geojson",
+                "https://tsb-opendata.s3.eu-central-1.amazonaws.com/lor_prognoseraeume/lor_prognoseraeume.gml",
+                "https://tsb-opendata.s3.eu-central-1.amazonaws.com/lor_prognoseraeume/lor_prognoseraeume.kml",
+                "https://tsb-opendata.s3.eu-central-1.amazonaws.com/lor_prognoseraeume/lor_prognoseraeume.shp.zip",
+                "https://tsb-opendata.s3.eu-central-1.amazonaws.com/lor_prognoseraeume/lor_prognoseraeume.sqlite"
+            ],
+            "dct:license": [
+                "Nutzungsbedingungen: Der Datenbestand wird unter der Lizenz CC-BY-3.0-Namensnennung veröffentlicht (vgl. https://creativecommons.org/licenses/by/3.0/de/). Als Urheber ist dabei zu nennen: Amt für Statistik Berlin-Brandenburg"
+            ],
+            "dcatde:politicalGeocodingLevelURI": [
+                "http://dcat-ap.de/def/politicalGeocoding/Level/state",
+                "http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict",
+                "http://dcat-ap.de/def/politicalGeocoding/Level/municipality",
+                "lor_prognoseraeume"
+            ],
+            "dcatde:politicalGeocodingURI": [
+                "http://dcat-ap.de/def/politicalGeocoding/stateKey/11",
+                "http://dcat-ap.de/def/politicalGeocoding/regionalKey/110000000000"
+            ],
+            "dcatde:geocodingText": [
+                "Berlin, Stadt"
+            ]
+        }
+    ]
+}
