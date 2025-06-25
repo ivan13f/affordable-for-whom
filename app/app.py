@@ -191,7 +191,10 @@ with col1:
 
     # Count affordable PLRs
     affordable_count = (valid_data["rent_burden"] <= 0.30).sum()
-    st.metric(label="Number of Affordable PLRs", value=f"{affordable_count}")
+    percentage = round((affordable_count / 542) * 100)
+    st.metric(
+        label="Number of Affordable PLRs",
+        value=f"{affordable_count} / 542 ({percentage}%)")
 
 with col2:
     custom_scale = [

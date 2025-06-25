@@ -324,6 +324,7 @@ with tabs[0]:
 
     st.markdown("---")
     st.markdown("### Framework and Definitions")
+    st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
 
     with st.expander("Housing Affordability", expanded=True):
         col1, col2, col3 = st.columns([1, 2, 1])
@@ -410,8 +411,12 @@ with tabs[0]:
     col1, col2 = st.columns([1,3])
 
     with col1:
+        st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
         st.markdown("### Data Sources")
+        st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
+
     with col2:
+        st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
         st.markdown("""
         <style>
         table {
@@ -467,13 +472,19 @@ with tabs[0]:
         </tbody>
         </table>
         """, unsafe_allow_html=True)
-    
+        st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
+
     st.markdown("---")
 
     col1, col2 = st.columns([1,3])
     with col1:
+        st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
         st.markdown("### Tech Stack")
+        st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
+
     with col2:
+        st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
+
         col1, col2, col3, col4 = st.columns([1,1,1,1])
         with col1:
             st.image("./python.svg")
@@ -484,6 +495,7 @@ with tabs[0]:
         with col4:
             st.image("./plotly.svg")
 
+        st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
     st.markdown("---")
 
 with tabs[1]:
@@ -2203,7 +2215,10 @@ with tabs[5]:
 
         # Count affordable PLRs
         affordable_count = (valid_data["rent_burden"] <= 0.30).sum()
-        st.metric(label="Number of Affordable PLRs", value=f"{affordable_count}")
+        percentage = round((affordable_count / 542) * 100)
+        st.metric(
+            label="Number of Affordable PLRs",
+            value=f"{affordable_count} / 542 ({percentage}%)")
 
     with col2:
         custom_scale = [
