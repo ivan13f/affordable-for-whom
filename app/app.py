@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 
 st.set_page_config(layout="wide")
 
-plr_geo = gpd.read_file("../data/geo/2021_PLR.geojson")
+plr_geo = gpd.read_file("data/geo/2021_PLR.geojson")
 plr_geo = plr_geo.to_crs(epsg=4326)
 plr_geo = plr_geo.rename(columns={
     "PLR_ID": "plr_id",
@@ -153,9 +153,9 @@ with col1:
     st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
     
     # Load data
-    rents_df = pd.read_csv("../data/csv/rent/rents_PLR.csv")
+    rents_df = pd.read_csv("data/csv/rent/rents_PLR.csv")
     rents_df = rents_df[rents_df["year"] == 2023]
-    geojson = gpd.read_file("../data/geo/2021_PLR.geojson")
+    geojson = gpd.read_file("data/geo/2021_PLR.geojson")
     geojson = geojson.to_crs(epsg=4326)
 
     # Standardize keys
