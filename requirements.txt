@@ -1,0 +1,5 @@
+geopandas
+pandas
+json
+plotly.express
+plotly.graph_objects
