@@ -1,9 +1,0 @@
-name: affordable
-channels:
-  - conda-forge
-dependencies:
-  - python=3.10
-  - streamlit
-  - pandas
-  - geopandas
-  - plotly
