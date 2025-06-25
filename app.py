@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 
 st.set_page_config(layout="wide")
 
-plr_geo = gpd.read_file("../data/geo/2021_PLR.geojson")
+plr_geo = gpd.read_file("./data/geo/2021_PLR.geojson")
 plr_geo = plr_geo.to_crs(epsg=4326)
 plr_geo = plr_geo.rename(columns={
     "PLR_ID": "plr_id",
@@ -16,16 +16,6 @@ plr_geo = plr_geo.rename(columns={
 })
 plr_geo["plr_id"] = plr_geo["plr_id"].astype(int)
 plr_geo["bez_id"] = plr_geo["bez_id"].astype(int)
-
-pgr_geo = gpd.read_file("../data/geo/2021_PGR.geojson")
-pgr_geo = pgr_geo.to_crs(epsg=4326)
-pgr_geo = pgr_geo.rename(columns={
-    "PGR_ID": "pgr_id",
-    "PGR_NAME": "pgr_name",
-    "BEZ": "bez_id"
-})
-pgr_geo["pgr_id"] = pgr_geo["pgr_id"].astype(int)
-pgr_geo["bez_id"] = pgr_geo["bez_id"].astype(int)
 
 # ---- GLOBAL CSS ----
 st.markdown("""
@@ -163,9 +153,9 @@ with col1:
     st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
     
     # Load data
-    rents_df = pd.read_csv("../data/csv/rent/rents_PLR.csv")
+    rents_df = pd.read_csv("./data/csv/rent/rents_PLR.csv")
     rents_df = rents_df[rents_df["year"] == 2023]
-    geojson = gpd.read_file("../data/geo/2021_PLR.geojson")
+    geojson = gpd.read_file("./data/geo/2021_PLR.geojson")
     geojson = geojson.to_crs(epsg=4326)
 
     # Standardize keys
