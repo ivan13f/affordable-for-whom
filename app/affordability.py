@@ -2217,7 +2217,7 @@ with tabs[5]:
         affordable_count = (valid_data["rent_burden"] <= 0.30).sum()
         percentage = round((affordable_count / 542) * 100)
         st.metric(
-            label="Number of Affordable PLRs",
+            label="Number of Affordable Planning Areas",
             value=f"{affordable_count} / 542 ({percentage}%)")
 
     with col2:
