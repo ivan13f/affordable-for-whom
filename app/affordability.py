@@ -227,7 +227,7 @@ with tabs[0]:
             margin=dict(r=0, t=0, l=0, b=0),
             coloraxis_colorbar=dict(
                 title="Median<br>Rent (€/m²)",
-                title_font=dict(size=16, color="black"),
+                title_font=dict(size=16, color="black", weight="bold"),
                 tickfont=dict(size=14, color="black"),
                 x=0.997,
                 xanchor="right",
@@ -1457,7 +1457,7 @@ with tabs[3]:
     with col1:
         st.markdown("## There are 232 PLRs where 1-Room-Apartment would be considered affordable for the median income earner.")
         st.markdown("Central areas has become increasingly unaffordable, with certain exceptions to be analysed in detail.")
-        st.markdown("**Asummptions:**\n- Average median available income 2023: 2031€/month.\n- Size 1-room-apartment: 50m².")
+        st.markdown("**Asummptions:**\n- Average median available income 2023: 2031 €/month.\n- Size 1-room-apartment: 50m².")
       
 
     with col2:
@@ -2104,40 +2104,42 @@ with tabs[5]:
     st.markdown("### Keys Takeaways")
     st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
 
-    col1, col2= st.columns([1,24])
+    col1, col2 = st.columns([1,24])
     with col1:
         st.markdown("""### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>1</span> """, unsafe_allow_html=True)
+    st.markdown("<div style='margin-top:10px'></div>", unsafe_allow_html=True) 
     with col2:
         st.markdown("##### **Berlin rents have surged**, increasing by 80% on average, and more than **doubling in 129 areas** since 2013.")
-        st.markdown("<div style='margin-top:20px'></div>", unsafe_allow_html=True)
-
+    
     col1, col2= st.columns([1,24])
     with col1:
         st.markdown("""### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>2</span> """, unsafe_allow_html=True)
+    st.markdown("<div style='margin-top:10px'></div>", unsafe_allow_html=True)
     with col2:
         st.markdown("##### **Incomes have grown – but rents have grown faster.** The average rent burden now sits at 34% citywide.")
-        st.markdown("<div style='margin-top:20px'></div>", unsafe_allow_html=True)
 
     col1, col2= st.columns([1,24])
     with col1:
         st.markdown("""### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>3</span> """, unsafe_allow_html=True)
+    st.markdown("<div style='margin-top:10px'></div>", unsafe_allow_html=True)
     with col2:
         st.markdown("##### **Affordability varies depending on income:** Only 43% of planning areas are affordable for **median earners**. For **Bürgergeld recipients**, that drops to just 2.7% of the city.")
-        st.markdown("<div style='margin-top:20px'></div>", unsafe_allow_html=True)
 
     col1, col2= st.columns([1,24])
     with col1:
         st.markdown("""### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>4</span> """, unsafe_allow_html=True)
+    st.markdown("<div style='margin-top:10px'></div>", unsafe_allow_html=True)
     with col2:
         st.markdown("##### **Subsidized housing units are decreasing.** Since 2015, Berlin has lost 58% of its subsidized housing — while demand continues to rise.")
-        st.markdown("<div style='margin-top:20px'></div>", unsafe_allow_html=True)
 
     col1, col2= st.columns([1,24])
     with col1:
         st.markdown("""### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>5</span> """, unsafe_allow_html=True)
+    st.markdown("<div style='margin-top:10px'></div>", unsafe_allow_html=True)
     with col2:
         st.markdown ("##### **Access to housing is becoming increasingly unequal**, shaped by geography, income, and policy limitations.")
-        st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
+    
+    st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
 
     st.markdown("---")
 
@@ -2284,8 +2286,8 @@ with tabs[5]:
 
     st.markdown("### Credits")
     with st.expander("", expanded=True):
-        st.markdown("###### Juni 2024")
-        st.markdown("This data analysis project is the capstone project at the end of the Data Analytics Bootcamp at Spiced Academy.")
+        st.markdown("###### June 2025")
+        st.markdown("This project is the capstone project at the end of the Data Analytics Bootcamp at Spiced Academy.")
         st.markdown("###### Concept and Design")
         st.markdown("""
             <a href="https://www.ivan-alfonsoburgos.com/" target="_blank" style="text-decoration: underline; color: #D4583B;">Iván Alfonso Burgos</a>

@@ -1,14 +1,11 @@
 import streamlit as st
-
-from tabs import (
-    show_intro_tab,
-    show_supply_tab,
-    show_demand_tab,
-    show_affordability_tab,
-    show_social_tab,
-    show_outlook_tab)
-
 st.set_page_config(layout="wide")
+from tabs.intro_tab import show_intro_tab
+from tabs.supply_tab import show_supply_tab
+from tabs.demand_tab import show_demand_tab
+from tabs.affordability_tab import show_affordability_tab
+from tabs.social_tab import show_social_tab
+from tabs.outlook_tab import show_outlook_tab
 
 # ---- GLOBAL CSS ----
 st.markdown("""
@@ -70,7 +67,7 @@ st.markdown("""
         margin-top: 0.5rem;
     }
             
-    .stMarkdown a, .scroll-button {
+    .scroll-button {
         color: #D4583B !important;
         font-weight: 400;
         font-size: 1rem;
@@ -136,10 +133,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-tabs = st.tabs([
-    "Intro", "Supply", "Demand",
-    "Affordability", "Social Housing", "Outlook"
-])
+# ---- TABS ----
+tabs = st.tabs(["Intro", "Supply", "Demand", "Affordability", "Social Housing", "Outlook"])
 
 with tabs[0]:
     show_intro_tab()
