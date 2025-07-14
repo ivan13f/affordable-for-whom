@@ -7,10 +7,11 @@ from data_loader import load_rents_PLR, load_plr_geo
 from data_loader import IMAGES_DIR
 import os
 
-rents_PLR = load_rents_PLR()
-plr_geo = load_plr_geo()
-
 def show_intro_tab():
+
+    rents_PLR = load_rents_PLR()
+    plr_geo = load_plr_geo()
+    
     st.markdown("# Affordable for Whom?")
     st.markdown("##### Exploring Rental Affordability in Berlin (2013–2023)")
 
@@ -122,35 +123,63 @@ def show_intro_tab():
         st.plotly_chart(fig_rent_choropleth, use_container_width=True)
 
     with col2:
-        st.markdown("###### Berlin has changed. But who has been priced out?")
-        st.markdown("This project looks at how rent prices, income, and housing dynamics have reshaped access to housing in Berlin — and who can still afford to live here.")
-        st.markdown("Over the past decade, rising rents have outpaced income growth for many, making large parts of the city increasingly unaffordable, especially for low-income residents.", unsafe_allow_html=True)
+        st.markdown("""
+        ###### Berlin has changed. But who has been priced out?
 
-    st.markdown("---")
-    st.markdown("<div style='margin-top:220px'></div>", unsafe_allow_html=True)
-    st.markdown("##### The city that built its reputation on cheap living and open culture is becoming increasingly inaccessible. But...")
-    st.markdown("<div style='margin-top:80px'></div>", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1,1,1])
+        This project looks at how rent prices, income, and housing dynamics have reshaped access to housing in Berlin — and who can still afford to live here.
+
+        Over the past decade, rising rents have outpaced income growth for many, making large parts of the city increasingly unaffordable, especially for low-income residents.
+        """)
+
+    st.markdown("""
+    ---
+
+    <br><br><br><br><br>
+
+    ##### The city that built its reputation on cheap living and open culture is becoming increasingly inaccessible. But...
+
+    <br><br><br><br>
+    """, unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns(3)
+
     with col1:
         with st.expander("1", expanded=True):
-            st.markdown("<div style='margin-top:100px'></div>", unsafe_allow_html=True)
-            st.markdown("""### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>1</span> """, unsafe_allow_html=True)
-            st.markdown("## Who is actually being priced out?")
-            st.markdown("<div style='margin-top:120px'></div>", unsafe_allow_html=True)
+            st.markdown("""
+            <br><br><br><br><br>
+
+            ### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>1</span>
+
+            ## Who is actually being priced out?
+
+            <br><br><br><br><br>
+            """, unsafe_allow_html=True)
+
     with col2:
         with st.expander("2", expanded=True):
-            st.markdown("<div style='margin-top:98.5px'></div>", unsafe_allow_html=True)
-            st.markdown("""## <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>2</span> """, unsafe_allow_html=True)
-            st.markdown("## What does affordable even mean in this context?")
-            st.markdown("<div style='margin-top:98.5px'></div>", unsafe_allow_html=True)
+            st.markdown("""
+            <br><br><br><br>
+
+            ### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>2</span>
+
+            ## What does affordable even mean in this context?
+
+            <br><br><br><br><br>
+            """, unsafe_allow_html=True)
+
     with col3:
         with st.expander("3", expanded=True):
-            st.markdown("<div style='margin-top:79px'></div>", unsafe_allow_html=True)
-            st.markdown("""## <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>3</span> """, unsafe_allow_html=True)
-            st.markdown("## How does rent affordability compare across the city and by income?")
-            st.markdown("<div style='margin-top:79px'></div>", unsafe_allow_html=True)
+            st.markdown("""
+            <br><br><br><br>
 
-    st.markdown("<div style='margin-top:300px'></div>", unsafe_allow_html=True)
+            ### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>3</span>
+
+            ## How does rent affordability compare across the city and by income?
+
+            <br><br><br><br>
+            """, unsafe_allow_html=True)
+
+    st.markdown("<br><br><br><br><br>", unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown("### Framework and Definitions")
@@ -167,9 +196,7 @@ def show_intro_tab():
             """)
             st.markdown("<div style='margin-top:px'></div>", unsafe_allow_html=True)
         with col3:
-            st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
             st.latex(r"\text{Rent Burden} = \frac{\text{Monthly Rent}}{\text{Net Income}}")
-            st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
 
     with st.expander("LOR", expanded=True):
         col1, col2, col3 = st.columns([1, 2, 1])
@@ -305,30 +332,4 @@ def show_intro_tab():
         """, unsafe_allow_html=True)
         st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
 
-    st.markdown("---")
-
-    col1, col2 = st.columns([1,3])
-    with col1:
-        st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
-        st.markdown("### Tech Stack")
-        st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
-
-    with col2:
-        st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
-
-        col1, col2, col3, col4 = st.columns([1,1,1,1])
-        with col1:
-            image_path_python = os.path.join(IMAGES_DIR, "python.svg")
-            st.image(image_path_python)
-        with col2:
-            image_path_pandas = os.path.join(IMAGES_DIR, "pandas.svg")
-            st.image(image_path_pandas)
-        with col3:
-            image_path_tableau = os.path.join(IMAGES_DIR, "tableau.svg")
-            st.image(image_path_tableau)            
-        with col4:
-            image_path_plotly = os.path.join(IMAGES_DIR, "plotly.svg")
-            st.image(image_path_plotly)             
-
-        st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
     st.markdown("---")

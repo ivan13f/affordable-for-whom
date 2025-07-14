@@ -4,51 +4,67 @@ import geopandas as gpd
 import plotly.graph_objects as go
 from data_loader import load_pop_BEZ, load_net_migration, load_income_persons, load_income_households
 
-pop_BEZ = load_pop_BEZ()
-net_migration = load_net_migration()
-income_persons = load_income_persons()
-income_households = load_income_households()
+
 
 def show_demand_tab():
-    st.markdown("## Population Dynamics and Income Trends")
-    st.markdown("---")
+
+    pop_BEZ = load_pop_BEZ()
+    net_migration = load_net_migration()
+    income_persons = load_income_persons()
+    income_households = load_income_households()
+
+    st.markdown("""
+    ## Population Dynamics and Income Trends  
+    ---
+
+    <br>
+    """, unsafe_allow_html=True)
 
     col1, col2 = st.columns([2,5])
 
+    # Clean Bezirke list and rename "Berlin Insgesamt"
+    pop_BEZ["bez_name"] = pop_BEZ["bez_name"].str.strip()
+    net_migration["bez_name"] = net_migration["bez_name"].str.strip()
+    bez_options_pop = sorted(net_migration["bez_name"].replace({"Berlin Insgesamt": "All Berlin"}).unique().tolist())
+
+    # Dropdown menu
+    selected_bezirk_pop = st.selectbox("Choose a district", options=bez_options_pop, key="selectbox_pop")
+
+    # Revert label for filtering
+    filter_bezirk = "Berlin Insgesamt" if selected_bezirk_pop == "All Berlin" else selected_bezirk_pop
+
+    # Prepare filtered data
+    if selected_bezirk_pop == "All Berlin":
+        pop_filtered = pop_BEZ.groupby("year")["population"].sum().reset_index()
+        mig_filtered = (
+            net_migration[net_migration["bez_name"] != "Berlin Insgesamt"]
+            .groupby("year")["net_migration"]
+            .sum()
+            .reset_index()
+        )
+    else:
+        pop_filtered = pop_BEZ[pop_BEZ["bez_name"] == filter_bezirk][["year", "population"]].copy()
+        mig_filtered = net_migration[net_migration["bez_name"] == filter_bezirk][["year", "net_migration"]].copy()
+
+    # Merge and sort
+    growth_df = pd.merge(pop_filtered, mig_filtered, on="year", how="inner").sort_values("year")
+    
     with col1:
-        st.markdown("## The population grew by 315,934 representing an 8,87%.")
-        st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
-        st.markdown('<p class="caption">* Based on residents registered through the population registration system.</p>', unsafe_allow_html=True)
-        st.markdown('<p class="caption">* In Reinickendorf and Tempelhof-Schöneberg, special effects are present due to initial reception centers for asylum seekers.</p>', unsafe_allow_html=True)
+        st.markdown("""
+        ## The population grew by 315,934 representing an 8.87%.
+
+        <br>
+
+        <p class="caption">
+        * Based on residents registered through the population registration system.
+        <br>
+        * In Reinickendorf and Tempelhof-Schöneberg, special effects are present due to initial reception centers for asylum seekers.
+        </p>
+
+        """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("###### Population Growth and Net Migration")
-        # Clean Bezirke list and rename "Berlin Insgesamt"
-        pop_BEZ["bez_name"] = pop_BEZ["bez_name"].str.strip()
-        net_migration["bez_name"] = net_migration["bez_name"].str.strip()
-        bez_options_pop = sorted(net_migration["bez_name"].replace({"Berlin Insgesamt": "All Berlin"}).unique().tolist())
-
-        # Dropdown menu
-        selected_bezirk_pop = st.selectbox("Choose a district", options=bez_options_pop, key="selectbox_pop")
-
-        # Revert label for filtering
-        filter_bezirk = "Berlin Insgesamt" if selected_bezirk_pop == "All Berlin" else selected_bezirk_pop
-
-        # Prepare filtered data
-        if selected_bezirk_pop == "All Berlin":
-            pop_filtered = pop_BEZ.groupby("year")["population"].sum().reset_index()
-            mig_filtered = (
-                net_migration[net_migration["bez_name"] != "Berlin Insgesamt"]
-                .groupby("year")["net_migration"]
-                .sum()
-                .reset_index()
-            )
-        else:
-            pop_filtered = pop_BEZ[pop_BEZ["bez_name"] == filter_bezirk][["year", "population"]].copy()
-            mig_filtered = net_migration[net_migration["bez_name"] == filter_bezirk][["year", "net_migration"]].copy()
-
-        # Merge and sort
-        growth_df = pd.merge(pop_filtered, mig_filtered, on="year", how="inner").sort_values("year")
 
         # Build figure
         fig_berlin_pop_migration = go.Figure()
@@ -167,10 +183,17 @@ def show_demand_tab():
 
         st.plotly_chart(fig_berlin_pop_migration, use_container_width=True)
 
-    st.markdown("---")
+    st.markdown("""
+    ---
 
-    st.markdown("## While rent prices increased, so did incomes —<br>particularly among those in the middle and upper brackets.", unsafe_allow_html=True)
-    st.markdown('<p class="caption">* The income increases are not adjusted to inflation.</p>', unsafe_allow_html=True)
+    ## While rent prices increased, so did incomes —<br>particularly among those in the middle and upper brackets.
+
+    <p class="caption">
+    * The income increases are not adjusted to inflation.
+    </p>
+
+    <br>
+    """, unsafe_allow_html=True)
 
     col1, col2 = st.columns([1,1])
 
@@ -281,12 +304,12 @@ def show_demand_tab():
             height=600,
             plot_bgcolor="white",
             paper_bgcolor="white",
-            margin=dict(l=60, r=60, t=40, b=60),
+            margin=dict(l=40, r=40, t=40, b=60),
             xaxis=dict(
                 title=None,
                 tickmode="linear",
                 dtick=1,
-                tickfont=dict(size=16, color="black"),
+                tickfont=dict(size=12, color="black"),
                 showline=True,
                 linecolor="black"
             ),
@@ -296,12 +319,12 @@ def show_demand_tab():
                 ticksuffix="%",
                 showline=True,
                 linecolor="black",
-                tickfont=dict(size=16, color="black")
+                tickfont=dict(size=12, color="black")
             ),
             legend=dict(
                 title="Monthly<br>Net Income (€)",
-                title_font=dict(size=16, color="black", weight="bold"),
-                font=dict(size=16, color="black"),
+                title_font=dict(size=12, color="black", weight="bold"),
+                font=dict(size=12, color="black"),
                 traceorder="normal",
                 yanchor="top",
                 y=1,
@@ -309,7 +332,7 @@ def show_demand_tab():
                 x=1.01
             ),
             hoverlabel=dict(
-                font_size=16,
+                font_size=14,
                 font_family="Arial",
                 font_color="black"
             )
@@ -325,7 +348,7 @@ def show_demand_tab():
             for col in income_cols:
                 value = year_data[col].values[0]
                 y_center = y_base + value / 2
-                x_shift = 0.4 if year == 2013 else -0.4
+                x_shift = 0.6 if year == 2013 else -0.4
 
                 annotations.append(dict(
                     x=year + x_shift,

@@ -6,10 +6,11 @@ import plotly.express as px
 import json
 from data_loader import load_rents_PLR, load_plr_geo
 
-rents_PLR = load_rents_PLR()
-plr_geo = load_plr_geo()
-
 def show_outlook_tab():
+     
+    rents_PLR = load_rents_PLR()
+    plr_geo = load_plr_geo()
+
     st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
     st.markdown("### Keys Takeaways")
     st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
@@ -17,7 +18,7 @@ def show_outlook_tab():
     col1, col2 = st.columns([1,24])
     with col1:
         st.markdown("""### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>1</span> """, unsafe_allow_html=True)
-    st.markdown("<div style='margin-top:10px'></div>", unsafe_allow_html=True) 
+        st.markdown("<div style='margin-top:10px'></div>", unsafe_allow_html=True) 
     with col2:
         st.markdown("##### **Berlin rents have surged**, increasing by 80% on average, and more than **doubling in 129 areas** since 2013.")
     

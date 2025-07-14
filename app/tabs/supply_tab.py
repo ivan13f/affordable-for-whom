@@ -6,22 +6,28 @@ import plotly.graph_objects as go
 import json
 from data_loader import load_rents_PLR, load_rents_BEZ, load_plr_geo, load_rent_structure
 
-rents_PLR = load_rents_PLR()
-rents_BEZ = load_rents_BEZ()
-rent_structure = load_rent_structure()
-plr_geo = load_plr_geo()
-
 def show_supply_tab():
+
+    rents_PLR = load_rents_PLR()
+    rents_BEZ = load_rents_BEZ()
+    rent_structure = load_rent_structure()
+    plr_geo = load_plr_geo()
+
     st.markdown("## Evolution of the Rental Market")
     st.markdown("---")
 
     col1, col2 = st.columns([2,5])
     with col1:
-        st.markdown("## New rentals increased on average 80,31% in price since 2013, and the increase only acelerated since 2020.")
-        st.markdown("Taking a look at the year-on-year increase in the average median price of new rentals, we see a rapid recovery after the COVID pandemic.")
-        st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
-        st.markdown('<p class="caption">* This is not the price that people pay, but the price of new listings. For that, it would be more useful to take a look at the Mietspiegel.</p>', unsafe_allow_html=True)
-        st.markdown('<p class="caption">* "All Berlin" is calculated as the average of district-level medians.</p>', unsafe_allow_html=True)
+        st.markdown("""
+        ## New rentals increased on average 80.31% in price since 2013, and the increase only accelerated since 2020.
+
+        Taking a look at the year-on-year increase in the average median price of new rentals, we see a rapid recovery after the COVID pandemic.
+
+        <br><br>
+
+        <p class="caption">* This is not the price that people pay, but the price of new listings. For that, it would be more useful to take a look at the Mietspiegel.</p>
+        <p class="caption">* "All Berlin" is calculated as the average of district-level medians.</p>
+        """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("###### Average Median Rent Prices and Yearly Increases")
@@ -201,16 +207,16 @@ def show_supply_tab():
         col1, col2 = st.columns(2)
         with col1:
             st.markdown(f"""
-                <div style="font-size:16px; font-weight:400; margin-bottom:4px;">Highest Rent Increase</div>
+                <div style="font-size:14px; font-weight:400; margin-bottom:4px;">Highest Rent Increase</div>
                 <div style="font-size:36px; font-weight:500; color:black;">{max_plr['pct_increase']:.1f}%</div>
-                <div style="font-size:16px; font-weight:600; color:black;">{max_plr['plr_name']}</div>
+                <div style="font-size:14px; font-weight:600; color:black;">{max_plr['plr_name']}</div>
             """, unsafe_allow_html=True)
 
         with col2:
             st.markdown(f"""
-                <div style="font-size:16px; font-weight:400; margin-bottom:4px;">Lowest Rent Increase</div>
+                <div style="font-size:14px; font-weight:400; margin-bottom:4px;">Lowest Rent Increase</div>
                 <div style="font-size:36px; font-weight:500; color:black;">{min_plr['pct_increase']:.1f}%</div>
-                <div style="font-size:16px; font-weight:600; color:black;">{min_plr['plr_name']}</div>
+                <div style="font-size:14px; font-weight:600; color:black;">{min_plr['plr_name']}</div>
             """, unsafe_allow_html=True)
 
     with COL2:
@@ -225,7 +231,7 @@ def show_supply_tab():
             color_continuous_scale=custom_diverging_scale,
             range_color=(zmin, zmax),
             mapbox_style="carto-positron",
-            zoom=9.7,
+            zoom=9.5,
             center={"lat": 52.52, "lon": 13.405},
             opacity=0.8,
             hover_name="plr_name",
@@ -255,11 +261,11 @@ def show_supply_tab():
                 thickness=12,
                 tickvals=[-40, 0, 50, 100, 200, 287],
                 ticktext=["-40%", "0%", "50%", "100%", "200%", "287%"],
-                title_font=dict(size=16, color="black"),
-                tickfont=dict(size=14, color="black")
+                title_font=dict(size=12, color="black"),
+                tickfont=dict(size=12, color="black")
             ),
             margin=dict(t=0, b=0, l=0, r=0),
-            height=800
+            height=600
         )
 
         fig_rent_increase.update_traces(
@@ -270,23 +276,57 @@ def show_supply_tab():
 
         st.plotly_chart(fig_rent_increase, use_container_width=True)
 
-    st.markdown("---")
+    st.markdown("""
+    ---
+                
+    ## All districts saw rent increases of over 60% since 2013, while the share of high-end listings has surged to 31% citywide.
+    <br>
+    """, unsafe_allow_html=True)
 
-    st.markdown("## All districts saw rent increases of over 60% since 2013, while the share of high-end listings has surged to 31% citywide.")
+    # Data prep
+    rents_filtered = rents_BEZ[rents_BEZ["year"].isin([2013, 2023])].copy()
+    rents_filtered["year"] = rents_filtered["year"].astype(str)
 
+    pivot_df = rents_filtered.pivot(index="bez_name", columns="year", values="median").reset_index()
+    pivot_df["pct_increase"] = ((pivot_df["2023"] - pivot_df["2013"]) / pivot_df["2013"] * 100).round(1)
+    pivot_df["label"] = pivot_df["pct_increase"].astype(str) + "% increase"
+    pivot_df = pivot_df.sort_values("2023", ascending=False)
+
+    # Rename Berlin insgesamt
+    rent_structure_fixed = rent_structure.copy()
+    rent_structure_fixed.loc[rent_structure_fixed["Bezirk"] == "Berlin insgesamt", "Bezirk"] = "Total Berlin"
+
+    # Separate and sort all but "Total Berlin"
+    df_main = rent_structure_fixed[rent_structure_fixed["Bezirk"] != "Total Berlin"]
+    df_total = rent_structure_fixed[rent_structure_fixed["Bezirk"] == "Total Berlin"]
+
+    # Sort by most expensive, then append "Total Berlin"
+    df_sorted = pd.concat([
+        df_main.sort_values(by="≥18 EUR/m²", ascending=False),
+        df_total
+    ], ignore_index=True)
+
+    # Get the column order and reverse for expensive → affordable
+    price_columns_structure = [col for col in rent_structure.columns if col != "Bezirk"]
+    reversed_columns = list(reversed(price_columns_structure))
+
+    # Reverse the color scale too
+    orange_gradient_structure = [
+        "#D4583B", "#D94425", "#ED4F2D", "#F86A3C", "#FC8C5C", "#FDB99B", "#FEE2D5"]
+
+    # Prepare manual y-axis category order
+    district_order = df_sorted["Bezirk"].tolist()
+    # Reverse the order of districts, keeping "Total Berlin" at the end
+    district_order = district_order[:-1][::-1] + [district_order[-1]]
+
+    # Create chart with conditional annotations
+    fig_rent_structure_chart = go.Figure()
+    x_offsets = {bez: 0 for bez in df_sorted["Bezirk"]}
+    
     col1, col2 = st.columns([1,1])
 
     with col1:
         st.markdown("###### Median Rent Price Increases per District 2013 vs 2023")
-
-        # Data prep
-        rents_filtered = rents_BEZ[rents_BEZ["year"].isin([2013, 2023])].copy()
-        rents_filtered["year"] = rents_filtered["year"].astype(str)
-
-        pivot_df = rents_filtered.pivot(index="bez_name", columns="year", values="median").reset_index()
-        pivot_df["pct_increase"] = ((pivot_df["2023"] - pivot_df["2013"]) / pivot_df["2013"] * 100).round(1)
-        pivot_df["label"] = pivot_df["pct_increase"].astype(str) + "% increase"
-        pivot_df = pivot_df.sort_values("2023", ascending=False)
 
         # Create figure
         fig3 = go.Figure()
@@ -318,7 +358,7 @@ def show_supply_tab():
         fig3.update_layout(
             yaxis=dict(
                 title=None,
-                tickfont=dict(size=16, color="black"),
+                tickfont=dict(size=12, color="black"),
                 showgrid=False,
                 showline=True,
                 linecolor="black",
@@ -327,7 +367,7 @@ def show_supply_tab():
             ),
             xaxis=dict(
                 title="Median Rent (€/m²)",
-                tickfont=dict(color="black"),
+                tickfont=dict(size=12, color="black"),
                 showgrid=False,
                 zeroline=False,
                 showline=True,
@@ -347,15 +387,15 @@ def show_supply_tab():
                 xanchor="right",
                 yanchor="bottom",
                 orientation="v",
-                font=dict(size=16, color="black")
+                font=dict(size=14, color="black")
             ),
-            height=800,
+            height=600,
             margin=dict(l=120, r=120, t=30, b=40),
             title="")
 
         fig3.update_traces(
             hoverlabel=dict(
-                font_size=16,
+                font_size=14,
                 font_family="Arial",
                 font_color="black")
         )
@@ -364,37 +404,6 @@ def show_supply_tab():
 
     with col2:
         st.markdown("###### Rental Market Segmentation 2023")
-
-        # 1. Copy and rename Berlin insgesamt
-        rent_structure_fixed = rent_structure.copy()
-        rent_structure_fixed.loc[rent_structure_fixed["Bezirk"] == "Berlin insgesamt", "Bezirk"] = "Total Berlin"
-
-        # 2. Separate and sort all but "Total Berlin"
-        df_main = rent_structure_fixed[rent_structure_fixed["Bezirk"] != "Total Berlin"]
-        df_total = rent_structure_fixed[rent_structure_fixed["Bezirk"] == "Total Berlin"]
-
-        # 3. Sort by most expensive, then append "Total Berlin"
-        df_sorted = pd.concat([
-            df_main.sort_values(by="≥18 EUR/m²", ascending=False),
-            df_total
-        ], ignore_index=True)
-
-        # 4. Get the column order and reverse for expensive → affordable
-        price_columns_structure = [col for col in rent_structure.columns if col != "Bezirk"]
-        reversed_columns = list(reversed(price_columns_structure))
-
-        # 5. Reverse the color scale too
-        orange_gradient_structure = [
-            "#D4583B", "#D94425", "#ED4F2D", "#F86A3C", "#FC8C5C", "#FDB99B", "#FEE2D5"]
-
-        # 6. Prepare manual y-axis category order
-        district_order = df_sorted["Bezirk"].tolist()
-        # Reverse the order of districts, keeping "Total Berlin" at the end
-        district_order = district_order[:-1][::-1] + [district_order[-1]]
-
-        # 7. Create chart with conditional annotations
-        fig_rent_structure_chart = go.Figure()
-        x_offsets = {bez: 0 for bez in df_sorted["Bezirk"]}
 
         for i, col in enumerate(reversed_columns):
             x_values = []
@@ -423,12 +432,12 @@ def show_supply_tab():
                 marker=dict(color=orange_gradient_structure[i]),
                 text=texts,
                 textposition="none",
-                textfont=dict(color="white", size=12, family="Arial", weight="bold"),
+                textfont=dict(color="white", size=12, family="Arial"),
                 customdata=x_values,
                 hovertemplate=f"{col}: %{{x}}<extra></extra>"
             ))
 
-        # 8. Layout
+        # Layout
         fig_rent_structure_chart.update_layout(
             barmode="stack",
             xaxis=dict(
@@ -448,16 +457,16 @@ def show_supply_tab():
                 showline=True,
                 linecolor="black",
                 linewidth=1,
-                tickfont=dict(size=16, color="black"),
+                tickfont=dict(size=12, color="black"),
             ),
             plot_bgcolor="#ffffff",
             paper_bgcolor="#ffffff",
-            height=800,
+            height=600,
             margin=dict(l=140, r=40, t=30, b=40),
             legend=dict(
                 title="Monthly Cold Rent",
                 title_font=dict(size=14, color="black", weight="bold"),
-                font=dict(size=14, color="black"),
+                font=dict(size=12, color="black"),
                 traceorder="normal",
                 yanchor="top",
                 y=1,
@@ -474,7 +483,7 @@ def show_supply_tab():
                         y=y,
                         text=text,
                         showarrow=False,
-                        font=dict(color="white", size=14, family="Arial", weight="bold"),
+                        font=dict(color="white", size=12, family="Arial"),
                         xanchor="center",
                         yanchor="middle"
                     )
