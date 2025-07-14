@@ -1,16 +1,16 @@
 import streamlit as st
-import pandas as pd
-import geopandas as gpd
 import plotly.graph_objects as go
 import plotly.express as px
 import json
-from data_loader import load_rents_BEZ, load_rents_PLR, load_income_persons, load_income_households, load_plr_geo
+from data_loader import load_rents_PLR, load_income_households
+from data_preprocessing import get_rent_burden, get_rent_burden_and_income
 
-rents_BEZ = load_rents_BEZ()
 rents_PLR = load_rents_PLR()
-income_persons = load_income_persons()
 income_households = load_income_households()
-plr_geo = load_plr_geo()
+
+df_rent_burden = get_rent_burden()
+df_rent_burden_and_income = get_rent_burden_and_income()
+
 
 def show_affordability_tab():
     st.markdown("## Affordability Analysis")
@@ -23,19 +23,6 @@ def show_affordability_tab():
         st.markdown('<p>Despite a slight dip during the pandemic, the rent burden continues to climb.</p>', unsafe_allow_html=True)
     with col2:
         st.markdown("###### Median Montly Disposable Income vs Median Rent")
-        rents_by_year = rents_BEZ.groupby('year')['median'].mean().reset_index()
-        income_df = income_persons[income_persons["year"].between(2013, 2023)].copy()
-        income_df.rename(columns={"monthly_disposable_income": "monthly_available_income"}, inplace=True)
-
-        combined = pd.merge(
-            rents_by_year[rents_by_year['year'].between(2013, 2023)],
-            income_df[['year', 'monthly_available_income']],
-            on='year',
-            how='inner'
-        )
-
-        combined['rent_1R'] = (combined['median'] * 50).round(0)
-        combined['rent_burden'] = (combined['rent_1R'] / combined['monthly_available_income'] * 100).round(0)
 
         income_color = "#8F8F8F"   # light grey
         rent_color = "#D4583B"     # strong orange
@@ -46,8 +33,8 @@ def show_affordability_tab():
 
         # Area: Rent
         fig_burden.add_trace(go.Scatter(
-            x=combined["year"],
-            y=combined["rent_1R"],
+            x=df_rent_burden["year"],
+            y=df_rent_burden["rent_1R"],
             name="1R Apartment Rent",
             fill="tonexty",
             fillcolor=rent_color,
@@ -60,8 +47,8 @@ def show_affordability_tab():
 
         # Area: Income
         fig_burden.add_trace(go.Scatter(
-            x=combined["year"],
-            y=combined["monthly_available_income"],
+            x=df_rent_burden["year"],
+            y=df_rent_burden["monthly_available_income"],
             name="Available Income",
             fill="tonexty",
             mode="lines+markers",
@@ -73,13 +60,13 @@ def show_affordability_tab():
 
         # Line: Rent Burden
         fig_burden.add_trace(go.Scatter(
-            x=combined["year"],
-            y=combined["rent_burden"],
+            x=df_rent_burden["year"],
+            y=df_rent_burden["rent_burden"],
             name="Rent Burden (%)",
             mode="lines+markers+text",
             line=dict(color=burden_color),
             marker=dict(size=6, color=burden_color),
-            text=["" if year in [2013, 2023] else f"{int(v)}%" for year, v in zip(combined["year"], combined["rent_burden"])],
+            text=["" if year in [2013, 2023] else f"{int(v)}%" for year, v in zip(df_rent_burden["year"], df_rent_burden["rent_burden"])],
             textposition="top center",
             textfont=dict(color=burden_color, size=13, family="Arial Black"),
             yaxis="y2",
@@ -129,8 +116,8 @@ def show_affordability_tab():
         # Adjusted annotations to avoid being cut off
         fig_burden.add_annotation(
             x=2013.3,
-            y=combined.loc[combined["year"] == 2013, "rent_burden"].values[0],
-            text=f"{int(combined.loc[combined['year'] == 2013, 'rent_burden'].values[0])}%",
+            y=df_rent_burden.loc[df_rent_burden["year"] == 2013, "rent_burden"].values[0],
+            text=f"{int(df_rent_burden.loc[df_rent_burden['year'] == 2013, 'rent_burden'].values[0])}%",
             showarrow=False,
             xanchor="center",
             yanchor="bottom",
@@ -140,8 +127,8 @@ def show_affordability_tab():
 
         fig_burden.add_annotation(
             x=2022.7,
-            y=combined.loc[combined["year"] == 2023, "rent_burden"].values[0],
-            text=f"{int(combined.loc[combined['year'] == 2023, 'rent_burden'].values[0])}%",
+            y=df_rent_burden.loc[df_rent_burden["year"] == 2023, "rent_burden"].values[0],
+            text=f"{int(df_rent_burden.loc[df_rent_burden['year'] == 2023, 'rent_burden'].values[0])}%",
             showarrow=False,
             xanchor="center",
             yanchor="bottom",
@@ -166,20 +153,9 @@ def show_affordability_tab():
         col1, col2 = st.columns([10, 1])
         
         with col1:
-            # Get median income for Berlin 2023
-            income_2023 = income_households[income_households["year"] == 2023]["monthly_available_income"].values[0]
-
-            # Filter rent prices for 2023 and calculate 1R rent & rent burden
-            rents_2023 = rents_PLR[rents_PLR["year"] == 2023][["plr_id", "median"]].copy()
-            rents_2023["rent_1R"] = rents_2023["median"] * 50
-            rents_2023["rent_burden"] = rents_2023["rent_1R"] / income_2023
-
-            # Merge with geometry
-            geo_merged = plr_geo.merge(rents_2023, on="plr_id", how="left")
-            gdf_median = gpd.GeoDataFrame(geo_merged, geometry="geometry", crs="EPSG:4326")
 
             # Convert to GeoJSON
-            geojson_dict = json.loads(gdf_median.to_json())
+            geojson_dict = json.loads(df_rent_burden_and_income.to_json())
 
             # Define color scale
             custom_scale = [
@@ -195,11 +171,11 @@ def show_affordability_tab():
 
             # Choropleth map
             fig_afford_median = px.choropleth_mapbox(
-                gdf_median,
+                df_rent_burden_and_income,
                 geojson=geojson_dict,
                 locations="plr_id",
                 featureidkey="properties.plr_id",
-                color="rent_burden",
+                color="rent_burden_median_income",
                 color_continuous_scale=custom_scale,
                 range_color=range_vals,
                 center={"lat": 52.52, "lon": 13.405},
@@ -209,15 +185,15 @@ def show_affordability_tab():
                 hover_name="plr_name",
                 hover_data={
                     "plr_id": False,
-                    "rent_burden": ':.1%',
+                    "rent_burden_median_income": ':.1%',
                     "rent_1R": ':.0f',
                 }
             )
 
             # Customization
             fig_afford_median.update_traces(
-                customdata=gdf_median[["rent_1R", "rent_burden"]],
-                hovertext=gdf_median["plr_name"],
+                customdata=df_rent_burden_and_income[["rent_1R", "rent_burden_median_income"]],
+                hovertext=df_rent_burden_and_income["plr_name"],
                 hovertemplate="<b>%{hovertext}</b><br>" +
                             "Rent 1R Apt.: %{customdata[0]:.0f} €<br>" +
                             "Rent Burden: %{customdata[1]:.1%}<extra></extra>",
@@ -252,13 +228,13 @@ def show_affordability_tab():
         with col2:
             # Binning based on rent burden for average median income
             bins_income = {
-                "0–15%": {"count": (gdf_median["rent_burden"] <= 0.15).sum(), "color": "#e0f3db"},
-                "15–30%": {"count": ((gdf_median["rent_burden"] > 0.15) & (gdf_median["rent_burden"] < 0.30)).sum(), "color": "#a8ddb5"},
-                "30%": {"count": (gdf_median["rent_burden"] == 0.30).sum(), "color": "#41b17a"},
-                "30–40%": {"count": ((gdf_median["rent_burden"] > 0.30) & (gdf_median["rent_burden"] < 0.40)).sum(), "color": "#fecc5c"},
-                "40–50%": {"count": ((gdf_median["rent_burden"] >= 0.40) & (gdf_median["rent_burden"] < 0.50)).sum(), "color": "#fd8d3c"},
-                "50–60%": {"count": ((gdf_median["rent_burden"] >= 0.50) & (gdf_median["rent_burden"] < 0.60)).sum(), "color": "#f03b20"},
-                "60%+": {"count": (gdf_median["rent_burden"] >= 0.60).sum(), "color": "#bd0026"},
+                "0–15%": {"count": (df_rent_burden_and_income["rent_burden_median_income"] <= 0.15).sum(), "color": "#e0f3db"},
+                "15–30%": {"count": ((df_rent_burden_and_income["rent_burden_median_income"] > 0.15) & (df_rent_burden_and_income["rent_burden_median_income"] < 0.30)).sum(), "color": "#a8ddb5"},
+                "30%": {"count": (df_rent_burden_and_income["rent_burden_median_income"] == 0.30).sum(), "color": "#41b17a"},
+                "30–40%": {"count": ((df_rent_burden_and_income["rent_burden_median_income"] > 0.30) & (df_rent_burden_and_income["rent_burden_median_income"] < 0.40)).sum(), "color": "#fecc5c"},
+                "40–50%": {"count": ((df_rent_burden_and_income["rent_burden_median_income"] >= 0.40) & (df_rent_burden_and_income["rent_burden_median_income"] < 0.50)).sum(), "color": "#fd8d3c"},
+                "50–60%": {"count": ((df_rent_burden_and_income["rent_burden_median_income"] >= 0.50) & (df_rent_burden_and_income["rent_burden_median_income"] < 0.60)).sum(), "color": "#f03b20"},
+                "60%+": {"count": (df_rent_burden_and_income["rent_burden_median_income"] >= 0.60).sum(), "color": "#bd0026"},
             }
 
             # Filter out zero-count categories
@@ -318,7 +294,6 @@ def show_affordability_tab():
 
     st.markdown("---")
 
-
     col1, col2 = st.columns([2, 5])
 
     with col1:
@@ -332,25 +307,15 @@ def show_affordability_tab():
         col1, col2 = st.columns([10, 1])
             
         with col1:
-            income_buergergeld = 1143
-
-            # 1. Filter rent prices for 2023 and calculate rent + burden
-            rents_2023_bg = rents_PLR[rents_PLR["year"] == 2023][["plr_id", "median"]].copy()
-            rents_2023_bg["rent_1R"] = rents_2023_bg["median"] * 50
-            rents_2023_bg["rent_burden"] = rents_2023_bg["rent_1R"] / income_buergergeld
-
-            # 2. Merge with geometry
-            geo_bg = plr_geo.merge(rents_2023_bg, on="plr_id", how="left")
-            gdf_bg = gpd.GeoDataFrame(geo_bg, geometry="geometry", crs="EPSG:4326")
-            geojson_bg = json.loads(gdf_bg.to_json())
+            geojson_bg = json.loads(df_rent_burden_and_income.to_json())
 
             # 4. Plot
             fig_afford_bg = px.choropleth_mapbox(
-                gdf_bg,
+                df_rent_burden_and_income,
                 geojson=geojson_bg,
                 locations="plr_id",
                 featureidkey="properties.plr_id",
-                color="rent_burden",
+                color="rent_burden_bg",
                 color_continuous_scale=custom_scale,
                 range_color=[0, 0.6],
                 center={"lat": 52.52, "lon": 13.405},
@@ -360,15 +325,15 @@ def show_affordability_tab():
                 hover_name="plr_name",
                 hover_data={
                     "plr_id": False, 
-                    "rent_burden": ':.1%',
+                    "rent_burden_bg": ':.1%',
                     "rent_1R": ':.0f',
                 }
             )
 
             # 5. Customize hover text with order, formatting, and styling
             fig_afford_bg.update_traces(
-                customdata=gdf_bg[["rent_1R", "rent_burden"]],
-                hovertext=gdf_bg["plr_name"],
+                customdata=df_rent_burden_and_income[["rent_1R", "rent_burden_bg"]],
+                hovertext=df_rent_burden_and_income["plr_name"],
                 hovertemplate="<b>%{hovertext}</b><br>" +
                             "Rent 1R Apt.: %{customdata[0]:.0f} €<br>" +
                             "Rent Burden: %{customdata[1]:.1%}<extra></extra>",
@@ -403,12 +368,12 @@ def show_affordability_tab():
         with col2:
             # Custom scale bins with counts (remove bins with count 0)
             bin_counts_custom = [
-                {"label": "15–30%", "count": 4, "color": "#a8ddb5"},
-                {"label": "30%", "count": 11, "color": "#41b17a"},
-                {"label": "30–40%", "count": 28, "color": "#fecc5c"},
-                {"label": "40–50%", "count": 95, "color": "#fd8d3c"},
-                {"label": "50–60%", "count": 172, "color": "#f03b20"},
-                {"label": "60%+", "count": 232, "color": "#bd0026"},
+                {"label": "15–30%", "count": ((df_rent_burden_and_income["rent_burden_bg"] > 0.15) & (df_rent_burden_and_income["rent_burden_bg"] < 0.30)).sum(), "color": "#a8ddb5"},
+                {"label": "30%", "count": (df_rent_burden_and_income["rent_burden_bg"] == 0.30).sum(), "color": "#41b17a"},
+                {"label": "30–40%", "count": ((df_rent_burden_and_income["rent_burden_bg"] > 0.30) & (df_rent_burden_and_income["rent_burden_bg"] < 0.40)).sum(), "color": "#fecc5c"},
+                {"label": "40–50%", "count": ((df_rent_burden_and_income["rent_burden_bg"] >= 0.40) & (df_rent_burden_and_income["rent_burden_bg"] < 0.50)).sum(), "color": "#fd8d3c"},
+                {"label": "50–60%", "count": ((df_rent_burden_and_income["rent_burden_bg"] >= 0.50) & (df_rent_burden_and_income["rent_burden_bg"] < 0.60)).sum(), "color": "#f03b20"},
+                {"label": "60%+", "count":  (df_rent_burden_and_income["rent_burden_bg"] >= 0.60).sum(), "color": "#bd0026"},
             ]
 
             # Filter out bins with 0 counts
