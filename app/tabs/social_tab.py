@@ -6,13 +6,14 @@ import plotly.express as px
 import json
 from data_loader import load_wohnatlas_2022, load_wbs_berlin, load_subsidies, load_sh_subsidized_totals, load_pgr_geo
 
-wohnatlas_2022 = load_wohnatlas_2022()
-wbs_berlin = load_wbs_berlin()
-subsidies = load_subsidies()
-sh_subsidized_totals = load_sh_subsidized_totals()
-pgr_geo = load_pgr_geo()
-
 def show_social_tab():
+    
+    wohnatlas_2022 = load_wohnatlas_2022()
+    wbs_berlin = load_wbs_berlin()
+    subsidies = load_subsidies()
+    sh_subsidized_totals = load_sh_subsidized_totals()
+    pgr_geo = load_pgr_geo()
+
     st.markdown("## Access to Social & Subsidized Housing")
     st.markdown("---")
 

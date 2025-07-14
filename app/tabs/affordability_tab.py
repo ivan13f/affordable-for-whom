@@ -6,13 +6,14 @@ import plotly.express as px
 import json
 from data_loader import load_rents_BEZ, load_rents_PLR, load_income_persons, load_income_households, load_plr_geo
 
-rents_BEZ = load_rents_BEZ()
-rents_PLR = load_rents_PLR()
-income_persons = load_income_persons()
-income_households = load_income_households()
-plr_geo = load_plr_geo()
-
 def show_affordability_tab():
+    
+    rents_BEZ = load_rents_BEZ()
+    rents_PLR = load_rents_PLR()
+    income_persons = load_income_persons()
+    income_households = load_income_households()
+    plr_geo = load_plr_geo()
+
     st.markdown("## Affordability Analysis")
     st.markdown("---")
     
