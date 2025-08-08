@@ -84,6 +84,8 @@ def load_plr_geo():
     "BEZ": "bez_id"})
     plr_geo["plr_id"] = plr_geo["plr_id"].astype(int)
     plr_geo["bez_id"] = plr_geo["bez_id"].astype(int)
+    plr_geo["geometry"] = plr_geo["geometry"].simplify(tolerance=0.001, preserve_topology=True)
+    
     return plr_geo
 
 @st.cache_data
@@ -96,4 +98,6 @@ def load_pgr_geo():
         "BEZ": "bez_id"})
     pgr_geo["pgr_id"] = pgr_geo["pgr_id"].astype(int)
     pgr_geo["bez_id"] = pgr_geo["bez_id"].astype(int)
+    pgr_geo["geometry"] = pgr_geo["geometry"].simplify(tolerance=0.001, preserve_topology=True)
+
     return pgr_geo

@@ -5,29 +5,30 @@ import json
 import plotly.express as px
 from data_loader import load_rents_PLR, load_plr_geo
 from data_loader import IMAGES_DIR
+from data_preprocessing import get_preprocessed_rents_choropleth
 import os
+
+def render_intro_expander(number, title, margin_top="80px"):
+    st.markdown(f"""
+        <div style="margin-top:{margin_top}; margin-bottom:{margin_top};">
+            <h3><span style='display:inline-flex; align-items:center; justify-content:center;
+            width:40px; height:40px; border-radius:50%; background:#D4583B; color:white;
+            margin-right:10px;'>{number}</span></h3>
+            <h3>{title}</h3>
+        </div>
+    """, unsafe_allow_html=True)
 
 def show_intro_tab():
 
     rents_PLR = load_rents_PLR()
     plr_geo = load_plr_geo()
+    gdf_rents_filtered, geojson_rents_plr = get_preprocessed_rents_choropleth()
     
     st.markdown("# Affordable for Whom?")
     st.markdown("##### Exploring Rental Affordability in Berlin (2013–2023)")
 
     col1, spacer, col2 = st.columns([18,1,5])
     with col1:
-        # Merge rents data with geometry
-        rents_geometry_merged = rents_PLR.merge(plr_geo[["plr_id", "geometry"]], on="plr_id", how="left")
-        gdf_rents_plr = gpd.GeoDataFrame(rents_geometry_merged, geometry="geometry", crs="EPSG:4326")
-
-        # Filter for 2013–2023
-        gdf_rents_filtered = gdf_rents_plr[(gdf_rents_plr["year"].between(2013, 2023)) & gdf_rents_plr["geometry"].notnull()].copy()
-
-        # Create GeoJSON dictionary from unique geometries
-        geojson_rents_plr = json.loads(
-            gdf_rents_filtered.drop_duplicates("plr_id")[["plr_id", "geometry"]].to_json())
-
         # Define color range
         vmin = gdf_rents_filtered["median"].min()
         vmax = gdf_rents_filtered["median"].max()
@@ -64,11 +65,7 @@ def show_intro_tab():
                 xanchor="right",
                 y=0.55,
                 yanchor="middle",
-                len=0.85
-            )
-        )
-
-        fig_rent_choropleth.update_layout(
+                len=0.85),
             updatemenus=[{
                 "type": "buttons",
                 "buttons": [{
@@ -91,28 +88,26 @@ def show_intro_tab():
                     "font": {"size": 14, "color": "black"},
                     "x": 0.1,
                     "y": 0.2,
-                    "direction": "left"
-                }],
+                    "direction": "left"}],
             sliders=[{
-                "active": 0,
-                "font": {"size": 16, "color": "black"},
-                "currentvalue": {
-                    "prefix": "Year ",
-                    "visible": True,
-                    "font": {"size": 16, "color": "black", "family": "Arial Black"}
-                },
-                "steps": [{
-                    "label": str(year),
-                    "method": "animate",
-                    "args": [[str(year)], {
-                        "frame": {"duration": 0, "redraw": True},
-                        "mode": "immediate"
-                    }]
-                } for year in sorted(gdf_rents_filtered["year"].unique())],
-                "x": 0.11,
-                "y": 0.22,
-                "len": 0.85
-            }]
+                    "active": 0,
+                    "font": {"size": 16, "color": "black"},
+                    "currentvalue": {
+                        "prefix": "Year ",
+                        "visible": True,
+                        "font": {"size": 16, "color": "black", "family": "Arial Black"}
+                    },
+                    "steps": [{
+                        "label": str(year),
+                        "method": "animate",
+                        "args": [[str(year)], {
+                            "frame": {"duration": 0, "redraw": True},
+                            "mode": "immediate"
+                        }]
+                    } for year in sorted(gdf_rents_filtered["year"].unique())],
+                    "x": 0.11,
+                    "y": 0.22,
+                    "len": 0.85}]
         )
         
         fig_rent_choropleth.update_traces(
@@ -120,6 +115,7 @@ def show_intro_tab():
             marker_line_width=0.5,
             hoverlabel=dict(font_size=16,font_family="Arial", font_color="black")
         )
+
         st.plotly_chart(fig_rent_choropleth, use_container_width=True)
 
     with col2:
@@ -131,55 +127,30 @@ def show_intro_tab():
         Over the past decade, rising rents have outpaced income growth for many, making large parts of the city increasingly unaffordable, especially for low-income residents.
         """)
 
+    st.markdown("---", unsafe_allow_html=True)
+
     st.markdown("""
-    ---
-
-    <br><br><br><br><br>
-
-    ##### The city that built its reputation on cheap living and open culture is becoming increasingly inaccessible. But...
-
-    <br><br><br><br>
+    <div style='margin-top:120px; margin-bottom:120px;'>
+        <h5> The city that built its reputation on cheap living and open culture is becoming increasingly inaccessible. But...</h5>
+    </div>
     """, unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
         with st.expander("1", expanded=True):
-            st.markdown("""
-            <br><br><br><br><br>
-
-            ### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>1</span>
-
-            ## Who is actually being priced out?
-
-            <br><br><br><br><br>
-            """, unsafe_allow_html=True)
+            render_intro_expander("1", "Who is actually being priced out?", margin_top="100px")
 
     with col2:
         with st.expander("2", expanded=True):
-            st.markdown("""
-            <br><br><br><br>
-
-            ### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>2</span>
-
-            ## What does affordable even mean in this context?
-
-            <br><br><br><br><br>
-            """, unsafe_allow_html=True)
+            render_intro_expander("2", "What does affordable even mean in this context?", margin_top="100px")
 
     with col3:
         with st.expander("3", expanded=True):
-            st.markdown("""
-            <br><br><br><br>
+            render_intro_expander("3", "How does rent affordability compare across the city and by income?", margin_top="80px")
 
-            ### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>3</span>
-
-            ## How does rent affordability compare across the city and by income?
-
-            <br><br><br><br>
-            """, unsafe_allow_html=True)
-
-    st.markdown("<br><br><br><br><br>", unsafe_allow_html=True)
+    # Final spacer
+    st.markdown("<div style='margin-top:120px;'></div>", unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown("### Framework and Definitions")
@@ -214,6 +185,7 @@ def show_intro_tab():
         with col3:
             image_path_LOR = os.path.join(IMAGES_DIR, "LOR.png")
             st.image(image_path_LOR)
+    
     with st.expander("Rent Definitions", expanded=True):
         col1, col2, col3 = st.columns([1, 2, 1])
         with col1:

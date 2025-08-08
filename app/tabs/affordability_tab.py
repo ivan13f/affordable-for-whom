@@ -18,9 +18,11 @@ def show_affordability_tab():
     
     col1, col2 = st.columns([2, 5])    
     with col1:
-        st.markdown("## Rents have risen faster than incomes, resulting in a rent burden of 34% for the average tenant in 2023.")
-        st.markdown('<p>This is still without accounting for housing expenses and heating.</p>', unsafe_allow_html=True)
-        st.markdown('<p>Despite a slight dip during the pandemic, the rent burden continues to climb.</p>', unsafe_allow_html=True)
+        st.markdown("""
+            <h2>Rents have risen faster than incomes, resulting in a rent burden of 34% for the average tenant in 2023.</h2>
+            <p>This is still without accounting for housing expenses and heating.</p>
+            <p>Despite a slight dip during the pandemic, the rent burden continues to climb.</p>        
+            """, unsafe_allow_html=True)
     with col2:
         st.markdown("###### Median Montly Disposable Income vs Median Rent")
 
@@ -142,11 +144,17 @@ def show_affordability_tab():
     col1, col2 = st.columns([2, 5])
 
     with col1:
-        st.markdown("## There are 232 PLRs where 1-Room-Apartment would be considered affordable for the median income earner.")
-        st.markdown("Central areas has become increasingly unaffordable, with certain exceptions to be analysed in detail.")
-        st.markdown("**Asummptions:**\n- Average median available income 2023: 2031 €/month.\n- Size 1-room-apartment: 50m².")
+        st.markdown("""
+            <h2>There are 232 PLRs where a 1-room apartment would be considered affordable for the median income earner.</h2>
+            <p>Central areas have become increasingly unaffordable, with certain exceptions to be analysed in detail.</p>
+            <p><strong>Assumptions:</strong><br>
+            <ul>
+                <li>Average median available income 2023: 2031 €/month.</li>
+                <li>Size 1-room apartment: 50 m².</li>
+            </ul>
+            </p>
+            """, unsafe_allow_html=True)
       
-
     with col2:
         st.markdown("###### Rent Burden by PLR 2023 (Median Income Earner, 1R Apartment)")
 
@@ -297,9 +305,18 @@ def show_affordability_tab():
     col1, col2 = st.columns([2, 5])
 
     with col1:
-        st.markdown("## But only 15 for the Social Welfare recipient")
-        st.markdown("The areas that are considered affordable are few and relayed to the outskirts.")
-        st.markdown("**Asummptions:**\n- Maximum coverage of cold rent for 1 person: 426 €/month.\n- Heating costs and Utilities: 50-70 €/month.\n- Monthly Allowance: 563 €/month.\n- Maximum 1-room-apartment size accepted: 50m².")
+        st.markdown("""
+                <h2>But only 15 for the Social Welfare recipient</h2>
+                <p>The areas that are considered affordable are few and relayed to the outskirts.</p>
+                <p><strong>Asummptions:</strong><br>
+                <ul>
+                    <li>Maximum coverage of cold rent for 1 person: 426 €/month.</li>
+                    <li>Heating costs and Utilities: 50-70 €/month.</li>
+                    <li>Monthly Allowance: 563 €/month.</li>
+                    <li>Maximum 1-room-apartment size accepted: 50m².</li>
+                </ul>
+                </p>
+                """, unsafe_allow_html=True)
 
     with col2:    
         st.markdown("###### Rent Burden by PLR 2023 (Social Welfare Recipient, 1R Apartment)")

@@ -18,15 +18,15 @@ def show_outlook_tab():
     col1, col2 = st.columns([1,24])
     with col1:
         st.markdown("""### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>1</span> """, unsafe_allow_html=True)
-        st.markdown("<div style='margin-top:10px'></div>", unsafe_allow_html=True) 
     with col2:
+        st.markdown("<div style='margin-top:10px'></div>", unsafe_allow_html=True) 
         st.markdown("##### **Berlin rents have surged**, increasing by 80% on average, and more than **doubling in 129 areas** since 2013.")
     
     col1, col2= st.columns([1,24])
     with col1:
         st.markdown("""### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>2</span> """, unsafe_allow_html=True)
-    st.markdown("<div style='margin-top:10px'></div>", unsafe_allow_html=True)
     with col2:
+        st.markdown("<div style='margin-top:10px'></div>", unsafe_allow_html=True) 
         st.markdown("##### **Incomes have grown – but rents have grown faster.** The average rent burden now sits at 34% citywide.")
 
     col1, col2= st.columns([1,24])
@@ -39,15 +39,15 @@ def show_outlook_tab():
     col1, col2= st.columns([1,24])
     with col1:
         st.markdown("""### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>4</span> """, unsafe_allow_html=True)
-    st.markdown("<div style='margin-top:10px'></div>", unsafe_allow_html=True)
     with col2:
+        st.markdown("<div style='margin-top:10px'></div>", unsafe_allow_html=True)
         st.markdown("##### **Subsidized housing units are decreasing.** Since 2015, Berlin has lost 58% of its subsidized housing — while demand continues to rise.")
 
     col1, col2= st.columns([1,24])
     with col1:
         st.markdown("""### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>5</span> """, unsafe_allow_html=True)
-    st.markdown("<div style='margin-top:10px'></div>", unsafe_allow_html=True)
     with col2:
+        st.markdown("<div style='margin-top:10px'></div>", unsafe_allow_html=True)
         st.markdown ("##### **Access to housing is becoming increasingly unequal**, shaped by geography, income, and policy limitations.")
     
     st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)

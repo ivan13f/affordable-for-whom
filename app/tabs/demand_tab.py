@@ -21,33 +21,6 @@ def show_demand_tab():
     """, unsafe_allow_html=True)
 
     col1, col2 = st.columns([2,5])
-
-    # Clean Bezirke list and rename "Berlin Insgesamt"
-    pop_BEZ["bez_name"] = pop_BEZ["bez_name"].str.strip()
-    net_migration["bez_name"] = net_migration["bez_name"].str.strip()
-    bez_options_pop = sorted(net_migration["bez_name"].replace({"Berlin Insgesamt": "All Berlin"}).unique().tolist())
-
-    # Dropdown menu
-    selected_bezirk_pop = st.selectbox("Choose a district", options=bez_options_pop, key="selectbox_pop")
-
-    # Revert label for filtering
-    filter_bezirk = "Berlin Insgesamt" if selected_bezirk_pop == "All Berlin" else selected_bezirk_pop
-
-    # Prepare filtered data
-    if selected_bezirk_pop == "All Berlin":
-        pop_filtered = pop_BEZ.groupby("year")["population"].sum().reset_index()
-        mig_filtered = (
-            net_migration[net_migration["bez_name"] != "Berlin Insgesamt"]
-            .groupby("year")["net_migration"]
-            .sum()
-            .reset_index()
-        )
-    else:
-        pop_filtered = pop_BEZ[pop_BEZ["bez_name"] == filter_bezirk][["year", "population"]].copy()
-        mig_filtered = net_migration[net_migration["bez_name"] == filter_bezirk][["year", "net_migration"]].copy()
-
-    # Merge and sort
-    growth_df = pd.merge(pop_filtered, mig_filtered, on="year", how="inner").sort_values("year")
     
     with col1:
         st.markdown("""
@@ -66,6 +39,33 @@ def show_demand_tab():
     with col2:
         st.markdown("###### Population Growth and Net Migration")
 
+        # Clean Bezirke list and rename "Berlin Insgesamt"
+        pop_BEZ["bez_name"] = pop_BEZ["bez_name"].str.strip()
+        net_migration["bez_name"] = net_migration["bez_name"].str.strip()
+        bez_options_pop = sorted(net_migration["bez_name"].replace({"Berlin Insgesamt": "All Berlin"}).unique().tolist())
+
+        # Dropdown menu
+        selected_bezirk_pop = st.selectbox("Choose a district", options=bez_options_pop, key="selectbox_pop")
+
+        # Revert label for filtering
+        filter_bezirk = "Berlin Insgesamt" if selected_bezirk_pop == "All Berlin" else selected_bezirk_pop
+
+        # Prepare filtered data
+        if selected_bezirk_pop == "All Berlin":
+            pop_filtered = pop_BEZ.groupby("year")["population"].sum().reset_index()
+            mig_filtered = (
+                net_migration[net_migration["bez_name"] != "Berlin Insgesamt"]
+                .groupby("year")["net_migration"]
+                .sum()
+                .reset_index()
+            )
+        else:
+            pop_filtered = pop_BEZ[pop_BEZ["bez_name"] == filter_bezirk][["year", "population"]].copy()
+            mig_filtered = net_migration[net_migration["bez_name"] == filter_bezirk][["year", "net_migration"]].copy()
+
+        # Merge and sort
+        growth_df = pd.merge(pop_filtered, mig_filtered, on="year", how="inner").sort_values("year")
+        
         # Build figure
         fig_berlin_pop_migration = go.Figure()
 

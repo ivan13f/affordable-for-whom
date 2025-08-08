@@ -1,5 +1,6 @@
 import pandas as pd
 import geopandas as gpd
+import json
 
 from data_loader import load_rents_BEZ, load_income_persons, load_income_households, load_rents_PLR, load_plr_geo
 
@@ -9,7 +10,28 @@ income_persons = load_income_persons()
 income_households = load_income_households()
 plr_geo = load_plr_geo()
 
+# --- INTRO TAB ---
 
+def get_preprocessed_rents_choropleth():
+
+    # Merge geometries
+    rents_geo = rents_PLR.merge(plr_geo[["plr_id", "geometry"]], on="plr_id", how="left")
+    gdf = gpd.GeoDataFrame(rents_geo, geometry="geometry", crs="EPSG:4326")
+
+    # Filter for animated years
+    gdf_filtered = gdf[gdf["year"].between(2013, 2023) & gdf["geometry"].notnull()].copy()
+    gdf_filtered["plr_id"] = gdf_filtered["plr_id"].astype(str)
+
+    # GeoJSON only needs to be built once (static geometry)
+    geojson = json.loads(gdf_filtered.drop_duplicates("plr_id")[["plr_id", "geometry"]].to_json())
+
+    return gdf_filtered, geojson
+
+# --- SUPPLY TAB ---
+
+# --- DEMAND TAB ---
+
+# --- AFFORDABILITY TAB ---
 def get_rent_burden() -> pd.DataFrame:
     """Calculate the rent burden for 1-room apartments based on median rents and monthly disposable income."""
     rents_by_year = (
@@ -62,3 +84,7 @@ def get_rent_burden_and_income():
     )
 
     return geo_merged
+
+# --- SOCIAL HOUSING TAB ---
+
+# --- OUTLOOK TAB ---
