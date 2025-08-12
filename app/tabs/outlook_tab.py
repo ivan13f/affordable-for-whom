@@ -5,11 +5,9 @@ import plotly.graph_objects as go
 import plotly.express as px
 import json
 from data_loader import load_rents_PLR, load_plr_geo
+from data_preprocessing import get_your_rent
 
 def show_outlook_tab():
-     
-    rents_PLR = load_rents_PLR()
-    plr_geo = load_plr_geo()
 
     st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
     st.markdown("### Keys Takeaways")
@@ -89,21 +87,7 @@ def show_outlook_tab():
         st.markdown("Select your income and apartment size and check how much of your income it would mean.")
         st.markdown("<div style='margin-top:40px'></div>", unsafe_allow_html=True)
         
-        # Load data
-        rents_df = pd.read_csv("../data/csv/rent/rents_PLR.csv")
-        rents_df = rents_df[rents_df["year"] == 2023]
-        geojson = gpd.read_file("../data/geo/2021_PLR.geojson")
-        geojson = geojson.to_crs(epsg=4326)
-
-        # Standardize keys
-        rents_df["plr_id"] = rents_df["plr_id"].astype(str).str.zfill(8)
-        geojson["PLR_ID"] = geojson["PLR_ID"].astype(str)
-
-        # Merge datasets
-        merged = geojson.merge(rents_df, left_on="PLR_ID", right_on="plr_id")
-
-        # Ensure numeric prices
-        merged["median"] = pd.to_numeric(merged["median"], errors="coerce")
+        gdf_base, geojson_dict = get_your_rent(year=2023)
 
         apartment_options = {
             "1-room (50 m²)": 50,
@@ -120,11 +104,12 @@ def show_outlook_tab():
         apartment_size = apartment_options[size_label]
 
         # Compute rent burden
-        merged["estimated_rent"] = merged["median"] * apartment_size
-        merged["rent_burden"] = merged["estimated_rent"] / income
+        gdf_view = gdf_base.copy()
+        gdf_view["estimated_rent"] = gdf_view["median"] * apartment_size
+        gdf_view["rent_burden"] = gdf_view["estimated_rent"] / income
 
         # Filter out missing rent burden
-        valid_data = merged[merged["rent_burden"].notna()]
+        valid_data = gdf_view[gdf_view["rent_burden"].notna()]
 
         # Count affordable PLRs
         affordable_count = (valid_data["rent_burden"] <= 0.30).sum()
@@ -144,9 +129,9 @@ def show_outlook_tab():
         [1.00, 'rgba(189,0,38,0.6)']]
 
         your_rent = go.Figure(go.Choroplethmapbox(
-            geojson=json.loads(geojson.to_json()),  
-            locations=valid_data["PLR_ID"],
-            featureidkey="properties.PLR_ID",
+            geojson=geojson_dict,  
+            locations=valid_data["plr_id"],
+            featureidkey="properties.plr_id",
             z=valid_data["rent_burden"],
             colorscale=custom_scale,
             zmin=0,
@@ -166,7 +151,7 @@ def show_outlook_tab():
                 yanchor="bottom"
             ),
             hovertext=valid_data.apply(
-                lambda row: f"{row['PLR_NAME']}<br>Rent Burden: {row['rent_burden']:.0%}", axis=1
+                lambda row: f"{row['plr_id']}<br>Rent Burden: {row['rent_burden']:.0%}", axis=1
             ),
             hoverinfo="text",
             name="Rent Burden"

@@ -88,3 +88,24 @@ def get_rent_burden_and_income():
 # --- SOCIAL HOUSING TAB ---
 
 # --- OUTLOOK TAB ---
+
+def get_your_rent(year: int = 2023):
+
+    rents = (
+        rents_PLR
+        .loc[lambda d: d["year"] == year, ["plr_id", "median"]]
+        .dropna(subset=["median"])
+        .copy()
+        )
+
+    #rents_y["plr_id"] = rents_y["plr_id"].astype(int)
+
+    gdf_base = (
+        plr_geo[["plr_id", "plr_name", "bez_id", "geometry"]]
+        .merge(rents, on="plr_id", how="left")
+        .pipe(gpd.GeoDataFrame, geometry="geometry", crs="EPSG:4326")
+    )
+
+    geojson_dict = json.loads(gdf_base.to_json())
+
+    return gdf_base, geojson_dict
