@@ -31,10 +31,10 @@ steps:
         '--region', 'europe-west3',
         '--allow-unauthenticated',
         '--port', '8501',
-        '--memory', '256Mi',
+        '--memory', '512Mi',
         '--cpu', '1',
         '--max-instances', '1',
-        '--min-instances', '0',
+        '--min-instances', '1',
         '--cpu-throttling'
       ]
 
