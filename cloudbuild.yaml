@@ -28,10 +28,10 @@ steps:
         'run', 'deploy', 'affordable-to-whom-app',               # Cloud Run service name
         '--image', 'gcr.io/$PROJECT_ID/affordable-to-whom-img:$SHORT_SHA', # Use the image we just pushed
         '--platform', 'managed',
-        '--region', 'us-central1',                     # Replace with your region
+        '--region', 'europe-west3',                     # Replace with your region
         '--allow-unauthenticated',                     # Make public; remove if you want auth
         '--port', '8501'
       ]
 
 images:
-  - 'gcr.io/$PROJECT_ID/affordable-to-whom-img'
+  - 'gcr.io/$PROJECT_ID/affordable-to-whom-img:$SHORT_SHA'
