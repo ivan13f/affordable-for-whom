@@ -25,12 +25,17 @@ steps:
     entrypoint: gcloud
     args:
       [
-        'run', 'deploy', 'affordable-to-whom-app',               # Cloud Run service name
-        '--image', 'gcr.io/$PROJECT_ID/affordable-to-whom-img:$SHORT_SHA', # Use the image we just pushed
+        'run', 'deploy', 'affordable-to-whom-app',
+        '--image', 'gcr.io/$PROJECT_ID/affordable-to-whom-img:$SHORT_SHA',
         '--platform', 'managed',
-        '--region', 'europe-west3',                     # Replace with your region
-        '--allow-unauthenticated',                     # Make public; remove if you want auth
-        '--port', '8501'
+        '--region', 'europe-west3',
+        '--allow-unauthenticated',
+        '--port', '8501',
+        '--memory', '256Mi',
+        '--cpu', '1',
+        '--max-instances', '1',
+        '--min-instances', '0',
+        '--cpu-throttling'
       ]
 
 images:
