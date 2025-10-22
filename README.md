@@ -1,6 +1,6 @@
 # Affordable for Whom? — Berlin Rental Affordability (2013–2023)
 
-**Live app** → affordable-for-whom.streamlit.app
+[**Live app**](https://affordable-to-whom-app-448752664124.europe-west3.run.app/)
 
 A data storytelling project exploring how affordable renting in Berlin really is — and for whom. The app brings together rent listings, income, population, and social/subsidized housing data to show how affordability evolved from 2013 to 2023, and lets you test affordability for different incomes and flat sizes.
 
