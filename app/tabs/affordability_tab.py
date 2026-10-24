@@ -306,13 +306,14 @@ def show_affordability_tab():
 
     with col1:
         st.markdown("""
-                <h2>But only 15 for the Social Welfare recipient</h2>
+                <h2>But only 33 for the Social Welfare recipient</h2>
                 <p>The areas that are considered affordable are few and relayed to the outskirts.</p>
-                <p><strong>Asummptions:</strong><br>
+                <p><strong>Assumptions</strong> (maximum monthly support, Berlin 2024–2026):<br>
                 <ul>
-                    <li>Maximum coverage of cold rent for 1 person: 426 €/month.</li>
-                    <li>Heating costs and Utilities: 50-70 €/month.</li>
-                    <li>Monthly Allowance: 563 €/month.</li>
+                    <li>Monthly Allowance (Regelsatz): 563 €/month.</li>
+                    <li>Maximum coverage of gross cold rent for 1 person (AV-Wohnen): 449 €/month.</li>
+                    <li>Maximum heating and hot water costs for 1 person: 133 €/month.</li>
+                    <li>Total: 1,145 €/month.</li>
                     <li>Maximum 1-room-apartment size accepted: 50m².</li>
                 </ul>
                 </p>

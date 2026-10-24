@@ -1,8 +1,7 @@
 Component,Amount (EUR)
 Bürgergeld (cash),563
-Kaltmiete (low estimate),426
-Kaltmiete (high estimate),460
-Heating/utilities (low),100
-Heating/utilities (high),120
-Total min estimate,1089
-Total max estimate,1143
+Bruttokaltmiete cap (AV-Wohnen 1 person),449
+Heating/utilities (low),90.5
+Heating/utilities (high),133
+Total min estimate,1102.5
+Total max estimate,1145
