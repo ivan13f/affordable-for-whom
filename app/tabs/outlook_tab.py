@@ -32,7 +32,7 @@ def show_outlook_tab():
         st.markdown("""### <span style='display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #D4583B; color: white; font-weight: bold; margin-right: 10px; font-size: 20px;'>3</span> """, unsafe_allow_html=True)
     st.markdown("<div style='margin-top:10px'></div>", unsafe_allow_html=True)
     with col2:
-        st.markdown("##### **Affordability varies depending on income:** Only 43% of planning areas are affordable for **median earners**. For **Bürgergeld recipients**, that drops to just 2.7% of the city.")
+        st.markdown("##### **Affordability varies depending on income:** Only 43% of planning areas are affordable for **median earners**. For **Bürgergeld recipients**, that drops to just 6.1% of the city.")
 
     col1, col2= st.columns([1,24])
     with col1:

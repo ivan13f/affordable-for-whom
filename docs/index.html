@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Affordable for Whom? — Berlin Rental Affordability 2013–2023</title>
+  <meta name="description" content="A data story on how affordable renting in Berlin is — and for whom: rents, incomes, population and social housing from 2013 to 2023.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%23D4583B'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Sans+3:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/4.1.1/plotly.min.js" defer></script>
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+<main class="page">
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <a role="tab" id="tab-intro" href="#intro" aria-controls="panel-intro">Intro</a>
+    <a role="tab" id="tab-supply" href="#supply" aria-controls="panel-supply">Supply</a>
+    <a role="tab" id="tab-demand" href="#demand" aria-controls="panel-demand">Demand</a>
+    <a role="tab" id="tab-affordability" href="#affordability" aria-controls="panel-affordability">Affordability</a>
+    <a role="tab" id="tab-social" href="#social" aria-controls="panel-social">Social Housing</a>
+    <a role="tab" id="tab-outlook" href="#outlook" aria-controls="panel-outlook">Outlook</a>
+  </nav>
+
+  <!-- ================= INTRO ================= -->
+  <section id="panel-intro" class="panel" role="tabpanel" aria-labelledby="tab-intro">
+    <h1>Affordable for Whom?</h1>
+    <h5>Exploring Rental Affordability in Berlin (2013–2023)</h5>
+
+    <div class="cols" style="--cols: 18fr 1fr 5fr">
+      <div class="chart" data-chart="rent_map" style="height:800px"></div>
+      <div></div>
+      <div>
+        <h6>Berlin has changed. But who has been priced out?</h6>
+        <p>This project looks at how rent prices, income, and housing dynamics have reshaped access to housing in Berlin — and who can still afford to live here.</p>
+        <p>Over the past decade, rising rents have outpaced income growth for many, making large parts of the city increasingly unaffordable, especially for low-income residents.</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <div style="margin:120px 0">
+      <h5>The city that built its reputation on cheap living and open culture is becoming increasingly inaccessible. But...</h5>
+    </div>
+
+    <div class="cols" style="--cols: 1fr 1fr 1fr">
+      <details class="expander" open>
+        <summary>1</summary>
+        <div class="question" style="margin:100px 0">
+          <h3><span class="num">1</span></h3>
+          <h3>Who is actually being priced out?</h3>
+        </div>
+      </details>
+      <details class="expander" open>
+        <summary>2</summary>
+        <div class="question" style="margin:100px 0">
+          <h3><span class="num">2</span></h3>
+          <h3>What does affordable even mean in this context?</h3>
+        </div>
+      </details>
+      <details class="expander" open>
+        <summary>3</summary>
+        <div class="question" style="margin:80px 0">
+          <h3><span class="num">3</span></h3>
+          <h3>How does rent affordability compare across the city and by income?</h3>
+        </div>
+      </details>
+    </div>
+
+    <div style="margin-top:120px"></div>
+    <hr>
+    <h3>Framework and Definitions</h3>
+    <div style="margin-top:40px"></div>
+
+    <details class="expander" open>
+      <summary>Housing Affordability</summary>
+      <div class="cols" style="--cols: 1fr 2fr 1fr">
+        <h3>What is Housing Affordability?</h3>
+        <div>
+          <p>Housing is considered <strong>affordable</strong> if a household spends no more than <strong>30% of its net income</strong> on rent.<br>
+          Rent burden above this threshold is considered financially straining — especially for low-income households.</p>
+        </div>
+        <div class="formula">
+          <math display="block">
+            <mtext>Rent Burden</mtext><mo>=</mo>
+            <mfrac><mtext>Monthly Rent</mtext><mtext>Net Income</mtext></mfrac>
+          </math>
+        </div>
+      </div>
+    </details>
+
+    <details class="expander" open>
+      <summary>LOR</summary>
+      <div class="cols" style="--cols: 1fr 2fr 1fr">
+        <h3>What are LOR?</h3>
+        <div>
+          <p>The Lebensweltlich Orientierte Räume system divides the city into standardized spatial units to support neighborhood-level analysis and policy-making based on social and everyday life structures. As of the 2021 update, Berlin is divided into:</p>
+          <ul>
+            <li><strong>12</strong> Bezirke (districts)</li>
+            <li><strong>52</strong> Prognoseräume (PGRs) — upper-level forecasting areas</li>
+            <li><strong>143</strong> Bezirksräume (BZRs) — medium-level forecasting areas</li>
+            <li><strong>542</strong> Planungsräume (PLRs) — the smallest, most granular unit in this analysis</li>
+          </ul>
+        </div>
+        <img src="assets/img/LOR.png" alt="Hierarchy of Berlin's LOR spatial units: districts, forecasting areas and planning areas" loading="lazy">
+      </div>
+    </details>
+
+    <details class="expander" open>
+      <summary>Rent Definitions</summary>
+      <div class="cols" style="--cols: 1fr 2fr 1fr">
+        <h3>What kind of Rent is analyzed?</h3>
+        <div>
+          <p>This project uses <strong>cold rent (Kaltmiete)</strong> from <strong>new listings</strong>, reflecting market entry prices between 2013 and 2023.<br>
+          These prices are not the same as the <strong>Mietspiegel</strong>, which represents average rents across existing contracts.<br>
+          Warm rent (<em>Warmmiete</em>), which includes heating and service charges, is not analyzed here.</p>
+        </div>
+        <div>
+          <p>Apartments are grouped by number of rooms:</p>
+          <ul>
+            <li><strong>1-room</strong>: up to 50 m²</li>
+            <li><strong>2-room</strong>: ~50–65 m²</li>
+            <li><strong>3 rooms</strong>: over 80 m²</li>
+          </ul>
+          <p>Most affordability comparisons focus on <strong>1-room apartments</strong>, as they are typically the most accessible for low-income residents.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="expander" open>
+      <summary>Rent-Controlled &amp; Regulated Units</summary>
+      <div class="cols" style="--cols: 1fr 2fr 1fr">
+        <h3>What is Subsidized Housing?</h3>
+        <div>
+          <p>Subsidized housing includes units with <strong>rent or access restrictions</strong>, often tied to public funding.<br>
+          Tenants typically need a <strong>WBS certificate</strong> <em>(Wohnungsberechtigungsschein)</em> to qualify.<br>
+          These units can be owned by either <strong>public</strong> or <strong>private</strong> landlords.</p>
+        </div>
+        <img src="assets/img/subsidized_housing.png" alt="Subsidized housing: public and private landlords with rent or access restrictions" loading="lazy">
+      </div>
+    </details>
+
+    <details class="expander" open>
+      <summary>Income Definitions</summary>
+      <div class="cols" style="--cols: 1fr 2fr 1fr">
+        <h3>What Income is used?</h3>
+        <div>
+          <p>This project uses <strong>monthly net income per inhabitant</strong> <em>(Verfügbares Einkommen der privaten Haushalte je Einwohner)</em><br>
+          It compares:</p>
+          <ul>
+            <li><strong>Median net income</strong></li>
+            <li><strong>Bürgergeld</strong> allowance and maximum coverage for rent.</li>
+          </ul>
+          <p>These values are used to estimate <strong>rent burden</strong> and assess affordability across groups.</p>
+        </div>
+        <div></div>
+      </div>
+    </details>
+
+    <hr>
+
+    <div class="cols" style="--cols: 1fr 3fr">
+      <h3 style="margin-top:40px">Data Sources</h3>
+      <div style="margin:40px 0">
+        <table class="sources">
+          <thead><tr><th>Source</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>Amt für Statistik Berlin-Brandenburg (<strong>AfS</strong>)</td><td>Population by PLR, Income 2022–2024, Household data 2023</td></tr>
+            <tr><td>Investitions Bank Berlin Housing Market Reports (<strong>IBB</strong>)</td><td>Median and Average Rent prices by PLR 2013–2014, Rent Trends</td></tr>
+            <tr><td>Bundesagentur für Arbeit (<strong>AfA</strong>)</td><td>Unemployment rates, Bürgergeld caps</td></tr>
+            <tr><td><strong>Wohnatlas 2022</strong>, Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen (<strong>SenStadt</strong>)</td><td>Social housing %, Social Welfare Recipients %, Geographic Information</td></tr>
+            <tr><td>Verband Berlin-Brandenburgischer Wohnungsunternehmen (<strong>BBU</strong>)</td><td>Social Housing data for 2017–2023</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr>
+  </section>
+
+  <!-- ================= SUPPLY ================= -->
+  <section id="panel-supply" class="panel" role="tabpanel" aria-labelledby="tab-supply" hidden>
+    <h2>Evolution of the Rental Market</h2>
+    <hr>
+
+    <div class="cols" style="--cols: 2fr 5fr">
+      <div>
+        <h2>New rentals increased on average 80.31% in price since 2013, and the increase only accelerated since 2020.</h2>
+        <p>Taking a look at the year-on-year increase in the average median price of new rentals, we see a rapid recovery after the COVID pandemic.</p>
+        <br><br>
+        <p class="caption">* This is not the price that people pay, but the price of new listings. For that, it would be more useful to take a look at the Mietspiegel.</p>
+        <p class="caption">* "All Berlin" is calculated as the average of district-level medians.</p>
+      </div>
+      <div>
+        <h6>Average Median Rent Prices and Yearly Increases</h6>
+        <label class="field">
+          <span>Choose a district</span>
+          <select data-options="rent_yoy_options" data-controls="rent_yoy"></select>
+        </label>
+        <div class="chart" data-chart="rent_yoy" style="height:600px"></div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="cols" style="--cols: 2fr 5fr">
+      <div>
+        <h2>Rent increases of 100% or more occurred in 129 PLRs, but the pattern is far from uniform.</h2>
+        <div class="cols" style="--cols: 1fr 1fr">
+          <div class="kpi">
+            <div class="kpi-label">Highest Rent Increase</div>
+            <div class="kpi-value" data-kpi="max.value"></div>
+            <div class="kpi-name" data-kpi="max.name"></div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Lowest Rent Increase</div>
+            <div class="kpi-value" data-kpi="min.value"></div>
+            <div class="kpi-name" data-kpi="min.name"></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h6>Median Rent Price Increases per PLR (2013–2023)</h6>
+        <div class="chart" data-chart="increase_map" style="height:600px"></div>
+      </div>
+    </div>
+
+    <hr>
+    <h2>All districts saw rent increases of over 60% since 2013, while the share of high-end listings has surged to 31% citywide.</h2>
+    <br>
+
+    <div class="cols" style="--cols: 1fr 1fr">
+      <div>
+        <h6>Median Rent Price Increases per District 2013 vs 2023</h6>
+        <div class="chart" data-chart="district_bars" style="height:600px"></div>
+      </div>
+      <div>
+        <h6>Rental Market Segmentation 2023</h6>
+        <div class="chart" data-chart="segmentation" style="height:600px"></div>
+      </div>
+    </div>
+
+    <hr>
+  </section>
+
+  <!-- ================= DEMAND ================= -->
+  <section id="panel-demand" class="panel" role="tabpanel" aria-labelledby="tab-demand" hidden>
+    <h2>Population Dynamics and Income Trends</h2>
+    <hr>
+    <br>
+
+    <div class="cols" style="--cols: 2fr 5fr">
+      <div>
+        <h2>The population grew by 315,934 representing an 8.87%.</h2>
+        <br>
+        <p class="caption">
+          * Based on residents registered through the population registration system.<br>
+          * In Reinickendorf and Tempelhof-Schöneberg, special effects are present due to initial reception centers for asylum seekers.
+        </p>
+      </div>
+      <div>
+        <h6>Population Growth and Net Migration</h6>
+        <label class="field">
+          <span>Choose a district</span>
+          <select data-options="pop_migration_options" data-controls="pop_migration"></select>
+        </label>
+        <div class="chart" data-chart="pop_migration" style="height:600px"></div>
+      </div>
+    </div>
+
+    <hr>
+    <h2>While rent prices increased, so did incomes —<br>particularly among those in the middle and upper brackets.</h2>
+    <p class="caption">* The income increases are not adjusted to inflation.</p>
+    <br>
+
+    <div class="cols" style="--cols: 1fr 1fr">
+      <div>
+        <h6>Average Net Household Income per Inhabitant since 1991</h6>
+        <div class="chart" data-chart="income_line" style="height:600px"></div>
+      </div>
+      <div>
+        <h6>Income Brackets Evolution % (2013–2023)</h6>
+        <div class="chart" data-chart="income_stack" style="height:600px"></div>
+      </div>
+    </div>
+
+    <hr>
+  </section>
+
+  <!-- ================= AFFORDABILITY ================= -->
+  <section id="panel-affordability" class="panel" role="tabpanel" aria-labelledby="tab-affordability" hidden>
+    <h2>Affordability Analysis</h2>
+    <hr>
+
+    <div class="cols" style="--cols: 2fr 5fr">
+      <div>
+        <h2>Rents have risen faster than incomes, resulting in a rent burden of 34% for the average tenant in 2023.</h2>
+        <p>This is still without accounting for housing expenses and heating.</p>
+        <p>Despite a slight dip during the pandemic, the rent burden continues to climb.</p>
+      </div>
+      <div>
+        <h6>Median Montly Disposable Income vs Median Rent</h6>
+        <div class="chart" data-chart="burden_line" style="height:600px"></div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="cols" style="--cols: 2fr 5fr">
+      <div>
+        <h2>There are <span data-kpi="median.affordable">232</span> PLRs where a 1-room apartment would be considered affordable for the median income earner.</h2>
+        <p>Central areas have become increasingly unaffordable, with certain exceptions to be analysed in detail.</p>
+        <p><strong>Assumptions:</strong></p>
+        <ul>
+          <li>Average median available income 2023: 2031 €/month.</li>
+          <li>Size 1-room apartment: 50 m².</li>
+        </ul>
+      </div>
+      <div>
+        <h6>Rent Burden by PLR 2023 (Median Income Earner, 1R Apartment)</h6>
+        <div class="cols map-with-bins" style="--cols: 10fr 1fr">
+          <div class="chart" data-chart="median_map" style="height:800px"></div>
+          <div class="chart" data-chart="median_bins" style="height:800px"></div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="cols" style="--cols: 2fr 5fr">
+      <div>
+        <h2>But only <span data-kpi="bg.affordable">33</span> for the Social Welfare recipient</h2>
+        <p>The areas that are considered affordable are few and relayed to the outskirts.</p>
+        <p><strong>Assumptions</strong> (maximum monthly support, Berlin 2024–2026):</p>
+        <ul>
+          <li>Monthly Allowance (Regelsatz): <span data-kpi="bg.allowance">563</span> €/month.</li>
+          <li>Maximum coverage of gross cold rent for 1 person (AV-Wohnen): <span data-kpi="bg.rent_cap">449</span> €/month.</li>
+          <li>Maximum heating and hot water costs for 1 person: <span data-kpi="bg.heating">133</span> €/month.</li>
+          <li>Total: <span data-kpi="bg.total">1,145</span> €/month.</li>
+          <li>Maximum 1-room-apartment size accepted: 50m².</li>
+        </ul>
+      </div>
+      <div>
+        <h6>Rent Burden by PLR 2023 (Social Welfare Recipient, 1R Apartment)</h6>
+        <div class="cols map-with-bins" style="--cols: 10fr 1fr">
+          <div class="chart" data-chart="bg_map" style="height:800px"></div>
+          <div class="chart" data-chart="bg_bins" style="height:800px"></div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+  </section>
+
+  <!-- ================= SOCIAL HOUSING ================= -->
+  <section id="panel-social" class="panel" role="tabpanel" aria-labelledby="tab-social" hidden>
+    <h2>Access to Social &amp; Subsidized Housing</h2>
+    <hr>
+    <h2>Welfare recipients are concentrated in specific districts, and the number of WBS certificates issued has grown alongside rising rents — reflecting increasing pressure on the city’s affordable housing system.</h2>
+
+    <div class="cols" style="--cols: 1fr 1fr">
+      <div>
+        <h6>Proportion of Social Welfare Recipients by PGR (2022)</h6>
+        <div class="chart" data-chart="welfare_map" style="height:600px"></div>
+      </div>
+      <div>
+        <h6>WBS Recipients (2015–2024)</h6>
+        <div class="chart" data-chart="wbs" style="height:600px"></div>
+      </div>
+    </div>
+
+    <hr>
+    <h2>The distribution of subsidized housing only partially aligns with areas of greatest need, and with a 58% decline in units since 2015, the shrinking supply deepens spatial inequality in housing access.</h2>
+
+    <div class="cols" style="--cols: 1fr 1fr">
+      <div>
+        <h6>Proportion of subsidized housing by PGR (2022)</h6>
+        <div class="chart" data-chart="subsidized_map" style="height:600px"></div>
+      </div>
+      <div>
+        <h6>Total Subsidized Units (2015-2024)</h6>
+        <div class="chart" data-chart="subsidized_bars" style="height:600px"></div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="cols" style="--cols: 2fr 5fr">
+      <div>
+        <h2>New construction by public housing companies falls short of demand.</h2>
+        <p>Too few units are subjected to rent and access controls — widening the gap between housing need and available support.</p>
+      </div>
+      <div>
+        <h6>New Units by Public Housing Companies and % Subsidized</h6>
+        <div class="chart" data-chart="new_units" style="height:600px"></div>
+      </div>
+    </div>
+
+    <hr>
+  </section>
+
+  <!-- ================= OUTLOOK ================= -->
+  <section id="panel-outlook" class="panel" role="tabpanel" aria-labelledby="tab-outlook" hidden>
+    <div style="margin-top:40px"></div>
+    <h3>Keys Takeaways</h3>
+    <div style="margin-top:40px"></div>
+
+    <ol class="takeaways">
+      <li><span class="num">1</span><h5><strong>Berlin rents have surged</strong>, increasing by 80% on average, and more than <strong>doubling in 129 areas</strong> since 2013.</h5></li>
+      <li><span class="num">2</span><h5><strong>Incomes have grown – but rents have grown faster.</strong> The average rent burden now sits at 34% citywide.</h5></li>
+      <li><span class="num">3</span><h5><strong>Affordability varies depending on income:</strong> Only <span data-kpi="median.share">43%</span> of planning areas are affordable for <strong>median earners</strong>. For <strong>Bürgergeld recipients</strong>, that drops to just <span data-kpi="bg.share">6.1%</span> of the city.</h5></li>
+      <li><span class="num">4</span><h5><strong>Subsidized housing units are decreasing.</strong> Since 2015, Berlin has lost 58% of its subsidized housing — while demand continues to rise.</h5></li>
+      <li><span class="num">5</span><h5><strong>Access to housing is becoming increasingly unequal</strong>, shaped by geography, income, and policy limitations.</h5></li>
+    </ol>
+
+    <div style="margin-top:40px"></div>
+    <hr>
+
+    <h3>Opportunities for Future Analysis</h3>
+    <p>Rental affordability is a complex issue shaped by many overlapping factors. While this project offers an overview of how rent prices, income, and social housing access have evolved in Berlin from 2013 to 2023, it does not capture the full complexity of the housing situation. Several important dimensions remain outside the current scope and present opportunities for future analysis:</p>
+    <ul>
+      <li><strong>Heating and utility costs</strong><br>
+        This analysis focuses on cold rent (<em>Kaltmiete</em>), but warm rent (<em>Warmmiete</em>) — which includes heating and service charges — would provide a more realistic picture of actual rent burdens.</li>
+      <li><strong>Household composition and housing needs</strong><br>
+        Affordability varies significantly depending on household type. Families, single parents, students, and elderly tenants have different spatial and size needs that affect what "affordable" means.</li>
+      <li><strong>Contract duration and real paid rents</strong><br>
+        Rent listings reflect market entry prices, not what tenants actually pay. Access to anonymized rent rolls, including contract start dates, would help assess how affordability differs between newcomers and long-term residents.</li>
+      <li><strong>Inflation-adjusted comparisons</strong><br>
+        Adjusting both rent and income data for inflation would allow for a clearer understanding of real purchasing power over time.</li>
+      <li><strong>Market segmentation and ownership structures</strong><br>
+        Differentiating between private landlords, institutional investors, and public housing companies would provide insight into how different actors shape the affordability landscape.</li>
+      <li><strong>Lack of rent data distribution within PLRs</strong><br>
+        This analysis uses median values per planning area, which can mask extreme disparities. Access to more granular rent data would help reveal internal inequalities within neighborhoods.</li>
+      <li><strong>Tenant protections and legal frameworks</strong><br>
+        While not covered in this project, policies such as rent caps, tenant protections, and eligibility rules play a critical role in shaping access to affordable housing.</li>
+    </ul>
+
+    <hr>
+
+    <h3>Outro: Where Could You Afford to Rent?</h3>
+    <div class="cols" style="--cols: 2fr 5fr">
+      <div>
+        <p>Select your income and apartment size and check how much of your income it would mean.</p>
+        <div style="margin-top:40px"></div>
+
+        <div class="field slider-field">
+          <label for="income">Select your monthly income (€)</label>
+          <div class="slider">
+            <output for="income" id="income-value">1500</output>
+            <input type="range" id="income" min="500" max="5000" step="50" value="1500">
+          </div>
+          <div class="slider-range"><span>500</span><span>5000</span></div>
+        </div>
+        <div style="margin-top:40px"></div>
+
+        <label class="field">
+          <span>Apartment size</span>
+          <select id="apartment-size">
+            <option value="50">1-room (50 m²)</option>
+            <option value="65">2-room (65 m²)</option>
+            <option value="80">3-room (80 m²)</option>
+          </select>
+        </label>
+        <div style="margin-top:40px"></div>
+
+        <div class="metric">
+          <div class="metric-label">Number of Affordable Planning Areas</div>
+          <div class="metric-value" id="affordable-count" aria-live="polite">–</div>
+        </div>
+      </div>
+      <div class="chart" data-chart="your_rent" style="height:900px"></div>
+    </div>
+
+    <hr>
+
+    <h3>Credits</h3>
+    <details class="expander" open>
+      <summary><span class="visually-hidden">Credits</span></summary>
+      <h6>June 2025</h6>
+      <p>This project is the capstone project at the end of the Data Analytics Bootcamp at Spiced Academy.</p>
+      <h6>Concept and Design</h6>
+      <p><a href="https://www.ivan-alfonsoburgos.com/" target="_blank" rel="noopener">Iván Alfonso Burgos</a></p>
+      <h6>Source Code</h6>
+      <p><a href="https://github.com/ivan13f/affordable-for-whom" target="_blank" rel="noopener">Github</a></p>
+      <h6>Sources</h6>
+      <p><a href="https://www.berlin.de/sen/wohnen/service/berliner-wohnungsmarkt/wohnatlas-berlin/" target="_blank" rel="noopener">Wohnatlas Berlin 2022</a></p>
+      <p><a href="https://www.ibb.de/de/ueber-uns/publikationen/wohnungsmarktbericht/2024.html#iframe_angebotsmieten/" target="_blank" rel="noopener">IBB Wohnungsmarktbericht 2024</a></p>
+      <p><a href="https://www.statistischebibliothek.de/mir/servlets/solr/find?condQuery=Statistischer+Bericht+%2F+A+%2F+I+%2F+16" target="_blank" rel="noopener">Statistischer Bericht  A I 16 – hj 1/ 24 Einwohnerregisterstatistik</a></p>
+      <p><a href="https://inberlinwohnen.de/kennzahlen/" target="_blank" rel="noopener">Die landeseigene Wohnungswirtschaft in Zahlen</a></p>
+      <p><a href="https://www.statistik-berlin-brandenburg.de/p-i-10-j" target="_blank" rel="noopener">Primäreinkommen und verfügbares Einkommen der privaten Haushalte 1991 bis 2022</a></p>
+    </details>
+
+    <hr>
+  </section>
+
+</main>
+</body>
+</html>

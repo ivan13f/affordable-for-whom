@@ -58,7 +58,8 @@ def get_rent_burden() -> pd.DataFrame:
 
 def get_rent_burden_and_income():
 
-    income_buergergeld = 1143
+    # Regelsatz 563 € + AV-Wohnen rent cap 449 € + max heating 133 € (Berlin, 1 person, 2024–2026)
+    income_buergergeld = 1145
 
     # Get median income for Berlin 2023
     income_2023 = (

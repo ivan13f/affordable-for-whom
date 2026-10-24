@@ -37,5 +37,18 @@ This project aggregates publicly available statistics and official geodata for B
 | [Wohnatlas 2022](https://www.berlin.de/sen/wohnen/service/berliner-wohnungsmarkt/wohnatlas-berlin) Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen **(SenStadt)** | Social housing %, Social Welfare Recipients %, Geographic Information |
 | Verband Berlin-Brandenburgischer Wohnungsunternehmen **(BBU)** | 	Social Housing data for 2017–2023 |
 
+## Static Site
+The `docs/` folder is a standalone version of the app: plain HTML, CSS and JavaScript with every chart precomputed, so it needs no server and can be hosted for free (GitHub Pages, Netlify, Cloudflare Pages).
+
+- `scripts/build_static.py` runs the same pandas/geopandas logic as the Streamlit app once and writes the figures to `docs/data/`. Re-run it only when the data changes:
+  ```bash
+  pip install pandas geopandas "plotly>=6"
+  python scripts/build_static.py
+  ```
+- `docs/assets/app.js` renders the figures with Plotly.js and handles the tabs, the district dropdowns and the "Where could you afford to rent?" slider in the browser.
+- Maps use CARTO's Positron vector basemap, which works without an API key.
+
+To preview locally, serve the folder (`python -m http.server --directory docs`) and open http://localhost:8000. To publish on GitHub Pages: Settings → Pages → Deploy from a branch → `main` / `docs`.
+
 ## Context
 Created as the capstone project for a Data Analytics bootcamp. The goal is to demonstrate end-to-end skills: data collection/cleaning, spatial analysis, interactive visualization, and narrative design.

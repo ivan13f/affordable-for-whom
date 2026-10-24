@@ -1,0 +1,287 @@
+/* Mirrors the Streamlit app: wide layout, Inter type, #f7f7f7 page, #D4583B accent. */
+:root {
+  --bg: #f7f7f7;
+  --text: #222;
+  --muted: rgba(49, 51, 63, 0.6);
+  --border: rgba(49, 51, 63, 0.2);
+  --accent: #D4583B;
+  --accent-hover: #b6462f;
+  --primary: #ff4b4b;        /* Streamlit's widget colour (tab underline, slider) */
+  --widget-bg: #f0f2f6;
+  --gap: 1rem;
+  font-size: 16px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  padding: 3rem 5rem 10rem;
+}
+
+/* ---- TABS ---- */
+.tabs {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: var(--bg);
+  border-bottom: 2px solid #ddd;
+  margin-bottom: 1rem;
+}
+.tabs::-webkit-scrollbar { display: none; }
+
+.tabs [role="tab"] {
+  flex: none;
+  padding: 12px 24px;
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 14px;
+  color: #444;
+  text-decoration: none;
+  white-space: nowrap;
+  border-radius: 5px 5px 0 0;
+  box-shadow: inset 0 -2px 0 transparent;
+  transition: background-color 0.2s ease;
+}
+.tabs [role="tab"]:hover { background: #ebebeb; color: #000; }
+.tabs [role="tab"][aria-selected="true"] {
+  background: #eaeaea;
+  color: #111;
+  font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--primary);
+}
+.tabs [role="tab"]:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
+
+/* ---- TYPE ---- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Inter", sans-serif;
+  color: var(--text);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  margin: 0;
+  text-align: left;
+}
+h1 { font-size: 2.4rem; font-weight: 600; padding: 1.25rem 0 1rem; }
+h2 { font-size: 2rem;   font-weight: 600; padding: 1rem 0; }
+h3 { font-size: 1.8rem; font-weight: 600; padding: 0.5rem 0 1rem; }
+h5 { font-size: 1.3rem; font-weight: 400; padding: 0.5rem 0 1rem; }
+h6 { font-size: 1rem;   font-weight: 600; padding: 0.25rem 0 1rem; }
+
+p, ul, ol, li {
+  font-size: 1rem;
+  line-height: 1.8;
+}
+p { margin: 0 0 1rem; }
+ul { margin: 0 0 1rem; padding-left: 1.5rem; }
+strong { font-weight: 600; }
+
+a { color: var(--accent); text-decoration: underline; }
+a:hover { color: var(--accent-hover); }
+
+hr {
+  border: none;
+  border-bottom: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+.caption {
+  font-size: 0.8rem;
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---- LAYOUT ---- */
+.cols {
+  display: grid;
+  grid-template-columns: var(--cols, 1fr 1fr);
+  gap: var(--gap);
+  align-items: start;
+}
+.cols > * { min-width: 0; }
+.cols img { width: 100%; height: auto; display: block; }
+
+/* ---- CHARTS ---- */
+.chart {
+  position: relative;
+  width: 100%;
+  background: #fff;
+}
+.chart[data-state="loading"]::before,
+.chart[data-state="error"]::before {
+  content: attr(data-message);
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.chart[data-state="error"]::before { color: var(--accent); }
+
+/* ---- WIDGETS ---- */
+.field {
+  display: block;
+  margin-bottom: 1rem;
+}
+.field > span, .field > label {
+  display: block;
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 14px;
+  color: rgb(49, 51, 63);
+  margin-bottom: 0.25rem;
+}
+.field select {
+  appearance: none;
+  width: 100%;
+  height: 40px;
+  padding: 0 2.5rem 0 0.75rem;
+  font: 16px "Source Sans 3", sans-serif;
+  color: rgb(49, 51, 63);
+  background: var(--widget-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2331333f' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 0.9rem center;
+  border: 1px solid var(--widget-bg);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.field select:focus-visible { outline: none; border-color: var(--primary); }
+
+.slider { position: relative; padding-top: 1.6rem; }
+.slider output {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font: 600 14px "Source Sans 3", sans-serif;
+  color: var(--primary);
+  white-space: nowrap;
+}
+.slider input[type="range"] {
+  width: 100%;
+  margin: 0;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+.slider-range {
+  display: flex;
+  justify-content: space-between;
+  font: 14px "Source Sans 3", sans-serif;
+  color: var(--muted);
+}
+
+.metric-label { font: 14px "Source Sans 3", sans-serif; color: rgb(49, 51, 63); }
+.metric-value { font: 400 2.25rem/1.4 "Source Sans 3", sans-serif; color: rgb(49, 51, 63); }
+
+.kpi-label { font-size: 14px; font-weight: 400; margin-bottom: 4px; }
+.kpi-value { font-size: 36px; font-weight: 500; color: black; min-height: 1.2em; }
+.kpi-name  { font-size: 14px; font-weight: 600; color: black; }
+
+/* ---- EXPANDERS ---- */
+.expander {
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  background: transparent;
+}
+.expander > summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  font: 16px "Source Sans 3", sans-serif;
+  color: rgb(49, 51, 63);
+  cursor: pointer;
+  border-radius: 0.5rem;
+}
+.expander > summary::-webkit-details-marker { display: none; }
+.expander > summary::after {
+  content: "";
+  width: 8px; height: 8px;
+  margin-left: auto;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-135deg);
+  transition: transform 0.2s ease;
+}
+.expander:not([open]) > summary::after { transform: rotate(45deg); }
+.expander > summary:hover { color: var(--primary); }
+.expander > :not(summary) { padding: 0 1rem 1rem; }
+.expander > .cols { padding: 0 1rem 1rem; }
+
+/* Numbered circles (intro questions, outlook takeaways) */
+.num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+}
+.question h3 { padding: 0.25rem 0; }
+.question .num { font-size: 1.8rem; font-weight: 600; }
+
+.takeaways { list-style: none; padding: 0; margin: 0; }
+.takeaways li {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: calc(var(--gap) + 1.5rem);
+  align-items: start;
+  margin-bottom: 1rem;
+}
+.takeaways h5 { padding-top: 0.5rem; }
+.takeaways h5 strong { font-weight: 700; }
+
+.formula { font-size: 1.2rem; }
+.formula math { font-family: "Latin Modern Math", "STIX Two Math", "Cambria Math", serif; }
+
+.sources {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1em;
+}
+.sources th, .sources td {
+  border: 1px solid #ddd;
+  padding: 0.8em;
+  vertical-align: top;
+  text-align: left;
+  line-height: 1.6;
+}
+.sources th { background: #f6f6f6; font-weight: 600; }
+.sources td { background: #fff; }
+
+/* ---- SMALL SCREENS (Streamlit stacks columns below 640px) ---- */
+@media (max-width: 1024px) {
+  .page { padding: 2rem 2rem 6rem; }
+}
+@media (max-width: 640px) {
+  .page { padding: 1rem 16px 4rem; }
+  .cols { grid-template-columns: 1fr; }
+  .cols.map-with-bins { grid-template-columns: 1fr 48px; }
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.4rem; }
+  .question { margin: 2rem 0 !important; }
+  .sources { table-layout: fixed; }
+  .sources th, .sources td { overflow-wrap: break-word; padding: 0.6em; }
+  .takeaways li { gap: 1rem; }
+}
