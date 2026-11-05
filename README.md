@@ -45,10 +45,12 @@ The `docs/` folder is a standalone version of the app: plain HTML, CSS and JavaS
   pip install pandas geopandas "plotly>=6"
   python scripts/build_static.py
   ```
-- `docs/assets/app.js` renders the figures with Plotly.js and handles the tabs, the district dropdowns and the "Where could you afford to rent?" slider in the browser.
+- `docs/assets/app.js` renders the figures with Plotly.js and handles the tabs, the district menus, the map timeline and the "Where could you afford to rent?" controls in the browser.
+- The page follows Apple's Human Interface Guidelines: the iOS type scale, 44pt controls on touch, Increase Contrast, Reduce Motion and text that reflows up to 200%. Affordable areas are outlined on the rent-burden maps, so the 30% threshold doesn't rely on colour alone.
 - Maps use CARTO's Positron vector basemap, which works without an API key.
+- Map boundaries are the full official LOR geometry from `data/geo/`, not simplified (the Streamlit app still simplifies them to stay responsive).
 
-To preview locally, serve the folder (`python -m http.server --directory docs`) and open http://localhost:8000. To publish on GitHub Pages: Settings → Pages → Deploy from a branch → `main` / `docs`.
+To preview locally, serve the folder (`python -m http.server --directory docs`) and open http://localhost:8000. To publish on GitHub Pages: Settings → Pages → Deploy from a branch → `develop` / `docs`.
 
 ## Context
 Created as the capstone project for a Data Analytics bootcamp. The goal is to demonstrate end-to-end skills: data collection/cleaning, spatial analysis, interactive visualization, and narrative design.
