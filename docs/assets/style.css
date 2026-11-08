@@ -164,8 +164,10 @@ h2 { font-size: 1.294rem; line-height: 1.2727; letter-spacing: -0.012em; font-we
     gap: 2.5rem;
     align-items: start;
   }
+  /* Landing page: the map leads on the left, the text follows on the right */
   .story--lead {
-    grid-template-areas: "hero hero" "text viz";
+    grid-template-columns: minmax(0, 8fr) minmax(0, 5fr);
+    grid-template-areas: "hero hero" "viz text";
     row-gap: 1.5rem;
   }
   .story-text h2, .statement {
