@@ -42,6 +42,7 @@ ACCENT_TEXT = "tomato"
 MAP_LINE = "darkgray"
 MAP_OUTLINE = "slategray"
 ACCENT_WASH = "rgba(212,88,59,0.12)"
+NEUTRAL_WASH = "rgba(142,142,147,0.12)"
 
 # One-hue ordinal ramps, light to dark, for ordered bands. Checked with the dataviz
 # validator (--ordinal) on the white card.
@@ -157,8 +158,11 @@ def write_json(name, payload):
 
 # ---- SHARED CHART ANATOMY ----
 
-MARGIN = dict(l=8, r=8, t=36, b=28)
-LEGEND = dict(orientation="h", x=0, xanchor="left", y=1.01, yanchor="bottom", traceorder="normal")
+# The top margin leaves room for the chart toolbar, so it never covers the plot
+MARGIN = dict(l=8, r=8, t=44, b=28)
+# Legends sit at the foot of the chart. Anchored to the container, they push the plot up
+# instead of overlapping the axis labels.
+LEGEND = dict(orientation="h", x=0, xanchor="left", y=0, yanchor="bottom", yref="container", traceorder="normal")
 
 
 def x_years(dtick=1, **kwargs):
@@ -179,23 +183,6 @@ SIDE_AXIS = dict(showgrid=False, showline=True, linecolor=AXIS, ticks="", zeroli
 def value_chip(x, y, text, **kwargs):
     """Value label on a dark chip, as on the original charts."""
     return dict(x=x, y=y, text=text, showarrow=False, bgcolor=INK, borderpad=4, font=dict(color=PAPER, size=14), **kwargs)
-
-
-def panel_title(text, axis="y"):
-    return dict(text=text, xref="paper", x=0, xanchor="left", yref=f"{axis} domain", y=1, yanchor="bottom",
-                showarrow=False, font=dict(size=13, color=INK_2))
-
-
-def two_panels(fig, top, bottom, **kwargs):
-    """Two measures of different scale share a time axis in two panels, not two y-scales."""
-    fig.update_layout(
-        margin=MARGIN, xaxis=dict(anchor="y2", **kwargs.pop("xaxis", x_years())),
-        yaxis=y_values(domain=[0.58, 1], **kwargs.pop("yaxis", {})),
-        yaxis2=y_values(domain=[0, 0.42], anchor="x", **kwargs.pop("yaxis2", {})),
-        hovermode="x unified", hoversubplots="axis", showlegend=kwargs.pop("showlegend", False),
-        annotations=[panel_title(top, "y"), panel_title(bottom, "y2")] + kwargs.pop("annotations", []),
-        **kwargs)
-    return fig
 
 
 def end_label(x, y, text, yref="y", xanchor="right", yshift=10):
@@ -378,7 +365,7 @@ def supply_segmentation():
                    ticks=""),
         yaxis=dict(type="category", categoryorder="array", categoryarray=order, showgrid=False, showline=False,
                    ticks="", ticklabelstandoff=6),
-        margin=dict(l=8, r=20, t=64, b=28), hovermode="y unified",
+        margin=dict(MARGIN, r=20), hovermode="y unified",
         legend=dict(LEGEND, title=dict(text="Monthly cold rent", side="top")))
     t = df[df["Bezirk"] == "Total Berlin"].iloc[0]
     return fig_json(fig, summary=f"Across Berlin in 2023, {t['≥18 EUR/m²']}% of listings asked 18 €/m² or more "
@@ -439,7 +426,7 @@ def demand_income_line():
         x=income_persons["year"], y=income_persons["monthly_disposable_income"], mode="lines+markers",
         name="Monthly Net Income", line=dict(color=INK, width=2), marker=dict(size=8, color=INK, line=dict(color=PAPER, width=2)),
         hovertemplate="%{x}: %{y:.2f} €<extra></extra>"))
-    fig.update_layout(margin=dict(l=8, r=8, t=24, b=28), xaxis=x_years(dtick=4, tick0=int(first_year)), yaxis=y_values(rangemode="tozero", ticksuffix=" €"),
+    fig.update_layout(margin=MARGIN, xaxis=x_years(dtick=4, tick0=int(first_year)), yaxis=y_values(rangemode="tozero", ticksuffix=" €"),
                       annotations=[end_label(last_year, last_value, f"{last_value:.2f} €")], hovermode="closest")
     return fig_json(fig, summary=f"{first_value:.2f} € per month in {first_year}, {last_value:.2f} € in {last_year}. "
                                  "Not adjusted for inflation.")
@@ -466,11 +453,11 @@ def demand_income_stack():
             value = row[col].values[0]
             annotations.append(dict(
                 x=year, y=y_base + value / 2, text=f"{value:.1f}%", showarrow=False, name=f"on:{color}",
-                font=dict(size=12), xanchor="left" if year == 2013 else "right", xshift=6 if year == 2013 else -6,
+                font=dict(size=12, weight="bold"), xanchor="left" if year == 2013 else "right", xshift=6 if year == 2013 else -6,
                 yanchor="middle"))
             y_base += value
     fig.update_layout(
-        margin=dict(l=20, r=8, t=64, b=28), xaxis=x_years(tick0=2013), hovermode="x unified",
+        margin=dict(MARGIN, l=20), xaxis=x_years(tick0=2013), hovermode="x unified",
         yaxis=y_values(range=[0, 100], ticksuffix="%"), annotations=annotations,
         legend=dict(LEGEND, title=dict(text="Monthly net income (€)", side="top")))
     first = households[households["year"] == 2013].iloc[0]
@@ -540,30 +527,39 @@ def affordability_kpis(df):
 
 
 def afford_burden_line(df):
+    """Rent and income in € on the left axis, rent burden in % on the right, as on the original chart.
+    The € axis runs to 3,000 so the burden line keeps to the top of the chart, clear of the income line."""
     first = df.loc[df["year"] == 2013, "rent_burden"].values[0]
     last = df.loc[df["year"] == 2023, "rent_burden"].values[0]
     fig = go.Figure()
     fig.add_trace(go.Scatter(
-        x=df["year"], y=df["monthly_available_income"], name="Available Income", mode="lines+markers", yaxis="y",
-        line=dict(color=NEUTRAL, width=2), marker=dict(size=8, color=NEUTRAL, line=dict(color=PAPER, width=2)),
-        hovertemplate="Median income: %{y:.0f} €<extra></extra>"))
-    fig.add_trace(go.Scatter(
         x=df["year"], y=df["rent_1R"], name="1R Apartment Rent", mode="lines+markers", yaxis="y", fill="tozeroy",
         fillcolor=ACCENT_WASH, line=dict(color=ACCENT, width=2),
         marker=dict(size=8, color=ACCENT, line=dict(color=PAPER, width=2)),
-        hovertemplate="1R apartment rent: %{y:.0f} €<extra></extra>"))
+        hovertemplate="1R apartment rent: %{y:,.0f} €<extra></extra>"))
     fig.add_trace(go.Scatter(
-        x=df["year"], y=df["rent_burden"], name="Rent Burden", mode="lines+markers", yaxis="y2", showlegend=False,
-        line=dict(color=INK, width=2), marker=dict(size=8, color=INK, line=dict(color=PAPER, width=2)),
+        x=df["year"], y=df["monthly_available_income"], name="Available Income", mode="lines+markers", yaxis="y",
+        fill="tonexty", fillcolor=NEUTRAL_WASH, line=dict(color=NEUTRAL, width=2),
+        marker=dict(size=8, color=NEUTRAL, line=dict(color=PAPER, width=2)),
+        hovertemplate="Median income: %{y:,.0f} €<extra></extra>"))
+    fig.add_trace(go.Scatter(
+        x=df["year"], y=df["rent_burden"], name="Rent Burden (%)", mode="lines+markers", yaxis="y2",
+        line=dict(color=INK, width=2.5), marker=dict(size=8, color=INK, line=dict(color=PAPER, width=2)),
         hovertemplate="Rent burden: %{y:.0f}%<extra></extra>"))
-    two_panels(fig, "€ per month", "Rent burden (%)", showlegend=True, legend=dict(LEGEND, y=1.04),
-               xaxis=x_years(tick0=2013, range=[2012.7, 2023.3]), yaxis=dict(rangemode="tozero"), yaxis2=dict(range=[0, 45]),
-               shapes=[dict(type="line", xref="paper", x0=0, x1=1, yref="y2", y0=30, y1=30, line=dict(color=INK_2, width=1))],
-               annotations=[
-                   dict(text="30% affordability threshold", xref="paper", x=0, xanchor="left", yref="y2", y=30,
-                        yanchor="bottom", showarrow=False, font=dict(size=12, color=INK_2)),
-                   end_label(2013, first, f"{int(first)}%", yref="y2", xanchor="left", yshift=-28),
-                   end_label(2023, last, f"{int(last)}%", yref="y2")])
+    fig.add_shape(type="line", xref="paper", x0=0, x1=1, yref="y2", y0=30, y1=30,
+                  line=dict(color=INK_2, width=1, dash="dash"))
+    fig.add_annotation(text="30% affordability threshold", xref="paper", x=0, xanchor="left", yref="y2", y=30,
+                       yanchor="bottom", showarrow=False, font=dict(size=12, color=INK_2))
+    fig.add_annotation(**value_chip(2013, first, f"{int(first)}%", yref="y2", xanchor="left", yanchor="top",
+                                    xshift=-14, yshift=-10))
+    fig.add_annotation(**value_chip(2023, last, f"{int(last)}%", yref="y2", xanchor="right", yanchor="middle",
+                                    xshift=-12))
+    fig.update_layout(
+        xaxis=x_years(tick0=2013, range=[2012.6, 2023.4]),
+        yaxis=dict(SIDE_AXIS, title=dict(text="€ per month", font=dict(color=INK)), range=[0, 3000]),
+        yaxis2=dict(SIDE_AXIS, title=dict(text="Rent burden (%)", font=dict(color=INK)), range=[0, 40],
+                    overlaying="y", side="right", tickmode="auto"),
+        legend=LEGEND, margin=MARGIN, hovermode="x unified")
     return fig_json(fig, summary=f"Rent for a 50 m² apartment took {int(first)}% of monthly income in 2013 "
                                  f"and {int(last)}% in 2023. The threshold is 30%.")
 
@@ -665,7 +661,7 @@ def social_subsidized():
         marker=dict(color=ACCENT, cornerradius=4), text=[f"{v:,}" for v in subsidies["subsidized_housing"]],
         textposition="outside", constraintext="none", cliponaxis=False, textfont=dict(size=12, color=INK_2),
         hovertemplate="%{x}: %{y:,} units<extra></extra>"))
-    fig.update_layout(margin=dict(l=8, r=8, t=24, b=28), xaxis=x_years(tick0=2015), yaxis=y_values(), showlegend=False,
+    fig.update_layout(margin=MARGIN, xaxis=x_years(tick0=2015), yaxis=y_values(), showlegend=False,
                       hovermode="closest")
     first, last = subsidies.iloc[0], subsidies.iloc[-1]
     return fig_json(fig, summary=f"{first['subsidized_housing']:,} units in {first['year']}, "

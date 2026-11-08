@@ -57,30 +57,28 @@
         <p>This project looks at how rent prices, income, and housing dynamics have reshaped access to housing in Berlin — and who can still afford to live here.</p>
         <p>Over the past decade, rising rents have outpaced income growth for many, making large parts of the city increasingly unaffordable, especially for low-income residents.</p>
       </div>
-      <figure class="card story-viz">
-        <figcaption class="card-head">
-          <h2 class="card-title">Median Rent per Planning Area</h2>
-          <p class="card-summary" data-summary></p>
-        </figcaption>
-        <div class="timeline" data-timeline>
-          <button type="button" class="round-button" data-play aria-label="Play">
-            <svg class="icon" aria-hidden="true" data-play-icon><use href="#i-play"/></svg>
-          </button>
-          <div class="timeline-track">
-            <input type="range" data-year-range aria-label="Year" min="0" max="10" step="1" value="0">
-            <div class="range-ends"><span data-year-first>2013</span><span data-year-last>2023</span></div>
+      <figure class="figure story-viz" aria-label="Median Rent per Planning Area">
+        <div class="card">
+          <div class="timeline" data-timeline>
+            <button type="button" class="round-button" data-play aria-label="Play">
+              <svg class="icon" aria-hidden="true" data-play-icon><use href="#i-play"/></svg>
+            </button>
+            <div class="timeline-track">
+              <input type="range" data-year-range aria-label="Year" min="0" max="10" step="1" value="0">
+              <div class="range-ends"><span data-year-first>2013</span><span data-year-last>2023</span></div>
+            </div>
           </div>
-        </div>
-        <div class="chart-frame">
-          <div class="chart chart--map" data-chart="rent_map"></div>
-          <output class="map-year" data-year aria-hidden="true">2013</output>
+          <div class="chart-frame">
+            <div class="chart chart--map" data-chart="rent_map"></div>
+            <output class="map-year" data-year aria-hidden="true">2013</output>
+          </div>
         </div>
       </figure>
     </div>
 
     <section class="block">
       <p class="lede">The city that built its reputation on cheap living and open culture is becoming increasingly inaccessible. But...</p>
-      <ol class="trio">
+      <ol class="trio questions">
         <li class="card question"><span class="num" aria-hidden="true">1</span><h2 class="question-text">Who is actually being priced out?</h2></li>
         <li class="card question"><span class="num" aria-hidden="true">2</span><h2 class="question-text">What does affordable even mean in this context?</h2></li>
         <li class="card question"><span class="num" aria-hidden="true">3</span><h2 class="question-text">How does rent affordability compare across the city and by income?</h2></li>
@@ -89,12 +87,16 @@
 
     <section class="block">
       <h2>Framework and Definitions</h2>
-      <div class="list">
-        <details class="disclosure" open>
-          <summary><svg class="icon disclosure-mark" aria-hidden="true"><use href="#i-chevron-right"/></svg>What is Housing Affordability?</summary>
-          <div class="disclosure-body duo">
-            <p>Housing is considered <strong>affordable</strong> if a household spends no more than <strong>30% of its net income</strong> on rent. Rent burden above this threshold is considered financially straining — especially for low-income households.</p>
-            <div class="formula">
+      <div class="definitions">
+        <details class="card definition" open>
+          <summary><svg class="icon disclosure-mark" aria-hidden="true"><use href="#i-chevron-right"/></svg>Housing Affordability</summary>
+          <div class="definition-body">
+            <h3 class="definition-title">What is Housing Affordability?</h3>
+            <div class="definition-text">
+              <p>Housing is considered <strong>affordable</strong> if a household spends no more than <strong>30% of its net income</strong> on rent.</p>
+              <p>Rent burden above this threshold is considered financially straining — especially for low-income households.</p>
+            </div>
+            <div class="definition-aside formula">
               <math display="block" aria-label="Rent burden equals monthly rent divided by net income">
                 <mtext>Rent Burden</mtext><mo>=</mo>
                 <mfrac><mtext>Monthly Rent</mtext><mtext>Net Income</mtext></mfrac>
@@ -102,10 +104,11 @@
             </div>
           </div>
         </details>
-        <details class="disclosure">
-          <summary><svg class="icon disclosure-mark" aria-hidden="true"><use href="#i-chevron-right"/></svg>What are LOR?</summary>
-          <div class="disclosure-body duo">
-            <div>
+        <details class="card definition" open>
+          <summary><svg class="icon disclosure-mark" aria-hidden="true"><use href="#i-chevron-right"/></svg>LOR</summary>
+          <div class="definition-body">
+            <h3 class="definition-title">What are LOR?</h3>
+            <div class="definition-text">
               <p>The Lebensweltlich Orientierte Räume system divides the city into standardized spatial units to support neighborhood-level analysis and policy-making based on social and everyday life structures. As of the 2021 update, Berlin is divided into:</p>
               <ul>
                 <li><strong>12</strong> Bezirke (districts)</li>
@@ -114,14 +117,19 @@
                 <li><strong>542</strong> Planungsräume (PLRs) — the smallest, most granular unit in this analysis</li>
               </ul>
             </div>
-            <img class="diagram" src="assets/img/LOR.png" width="500" height="500" alt="Nested circles: 12 Bezirke contain 52 Prognoseräume, which contain 143 Bezirksregionen, which contain 542 Planungsräume." loading="lazy">
+            <img class="definition-aside diagram" src="assets/img/LOR.png" width="500" height="500" alt="Nested circles: 12 Bezirke contain 52 Prognoseräume, which contain 143 Bezirksregionen, which contain 542 Planungsräume." loading="lazy">
           </div>
         </details>
-        <details class="disclosure">
-          <summary><svg class="icon disclosure-mark" aria-hidden="true"><use href="#i-chevron-right"/></svg>What kind of Rent is analyzed?</summary>
-          <div class="disclosure-body duo">
-            <p>This project uses <strong>cold rent (Kaltmiete)</strong> from <strong>new listings</strong>, reflecting market entry prices between 2013 and 2023. These prices are not the same as the <strong>Mietspiegel</strong>, which represents average rents across existing contracts. Warm rent (<em>Warmmiete</em>), which includes heating and service charges, is not analyzed here.</p>
-            <div>
+        <details class="card definition" open>
+          <summary><svg class="icon disclosure-mark" aria-hidden="true"><use href="#i-chevron-right"/></svg>Rent Definitions</summary>
+          <div class="definition-body">
+            <h3 class="definition-title">What kind of Rent is analyzed?</h3>
+            <div class="definition-text">
+              <p>This project uses <strong>cold rent (Kaltmiete)</strong> from <strong>new listings</strong>, reflecting market entry prices between 2013 and 2023.</p>
+              <p>These prices are not the same as the <strong>Mietspiegel</strong>, which represents average rents across existing contracts.</p>
+              <p>Warm rent (<em>Warmmiete</em>), which includes heating and service charges, is not analyzed here.</p>
+            </div>
+            <div class="definition-aside">
               <p>Apartments are grouped by number of rooms:</p>
               <ul>
                 <li><strong>1-room</strong>: up to 50 m²</li>
@@ -132,22 +140,30 @@
             </div>
           </div>
         </details>
-        <details class="disclosure">
-          <summary><svg class="icon disclosure-mark" aria-hidden="true"><use href="#i-chevron-right"/></svg>What is Subsidized Housing?</summary>
-          <div class="disclosure-body duo">
-            <p>Subsidized housing includes units with <strong>rent or access restrictions</strong>, often tied to public funding. Tenants typically need a <strong>WBS certificate</strong> <em>(Wohnungsberechtigungsschein)</em> to qualify. These units can be owned by either <strong>public</strong> or <strong>private</strong> landlords.</p>
-            <img class="diagram" src="assets/img/subsidized_housing.png" width="500" height="500" alt="Two overlapping circles, Public and Private. Subsidized housing is the overlap between them." loading="lazy">
+        <details class="card definition" open>
+          <summary><svg class="icon disclosure-mark" aria-hidden="true"><use href="#i-chevron-right"/></svg>Rent-Controlled &amp; Regulated Units</summary>
+          <div class="definition-body">
+            <h3 class="definition-title">What is Subsidized Housing?</h3>
+            <div class="definition-text">
+              <p>Subsidized housing includes units with <strong>rent or access restrictions</strong>, often tied to public funding.</p>
+              <p>Tenants typically need a <strong>WBS certificate</strong> <em>(Wohnungsberechtigungsschein)</em> to qualify.</p>
+              <p>These units can be owned by either <strong>public</strong> or <strong>private</strong> landlords.</p>
+            </div>
+            <img class="definition-aside diagram" src="assets/img/subsidized_housing.png" width="500" height="500" alt="Two overlapping circles, Public and Private. Subsidized housing is the overlap between them." loading="lazy">
           </div>
         </details>
-        <details class="disclosure">
-          <summary><svg class="icon disclosure-mark" aria-hidden="true"><use href="#i-chevron-right"/></svg>What Income is used?</summary>
-          <div class="disclosure-body">
-            <p>This project uses <strong>monthly net income per inhabitant</strong> <em>(Verfügbares Einkommen der privaten Haushalte je Einwohner)</em>. It compares:</p>
-            <ul>
-              <li><strong>Median net income</strong></li>
-              <li><strong>Bürgergeld</strong> allowance and maximum coverage for rent.</li>
-            </ul>
-            <p>These values are used to estimate <strong>rent burden</strong> and assess affordability across groups.</p>
+        <details class="card definition" open>
+          <summary><svg class="icon disclosure-mark" aria-hidden="true"><use href="#i-chevron-right"/></svg>Income Definitions</summary>
+          <div class="definition-body">
+            <h3 class="definition-title">What Income is used?</h3>
+            <div class="definition-text">
+              <p>This project uses <strong>monthly net income per inhabitant</strong> <em>(Verfügbares Einkommen der privaten Haushalte je Einwohner)</em>. It compares:</p>
+              <ul>
+                <li><strong>Median net income</strong></li>
+                <li><strong>Bürgergeld</strong> allowance and maximum coverage for rent.</li>
+              </ul>
+              <p>These values are used to estimate <strong>rent burden</strong> and assess affordability across groups.</p>
+            </div>
           </div>
         </details>
       </div>
@@ -176,19 +192,20 @@
         <p class="caption">* This is not the price that people pay, but the price of new listings. For that, it would be more useful to take a look at the Mietspiegel.</p>
         <p class="caption">* "All Berlin" is calculated as the average of district-level medians.</p>
       </div>
-      <figure class="card story-viz">
-        <figcaption class="card-head">
-          <h3 class="card-title">Average Median Rent Prices and Yearly Increases</h3>
-          <p class="card-summary" data-summary aria-live="polite"></p>
+      <figure class="figure story-viz">
+        <div class="card">
+          <label class="popup">
+            <span>Choose a district</span>
+            <span class="popup-control">
+              <select data-options="rent_yoy_options" data-controls="rent_yoy"></select>
+              <svg class="icon" aria-hidden="true"><use href="#i-chevrons-up-down"/></svg>
+            </span>
+          </label>
+          <div class="chart chart--panels" data-chart="rent_yoy"></div>
+        </div>
+        <figcaption class="figure-caption">
+          <span class="figure-title">Average Median Rent Prices and Yearly Increases</span>
         </figcaption>
-        <label class="popup">
-          <span>Choose a district</span>
-          <span class="popup-control">
-            <select data-options="rent_yoy_options" data-controls="rent_yoy"></select>
-            <svg class="icon" aria-hidden="true"><use href="#i-chevrons-up-down"/></svg>
-          </span>
-        </label>
-        <div class="chart chart--panels" data-chart="rent_yoy"></div>
       </figure>
     </div>
 
@@ -208,31 +225,34 @@
           </div>
         </div>
       </div>
-      <figure class="card story-viz">
-        <figcaption class="card-head">
-          <h3 class="card-title">Median Rent Price Increases per PLR (2013–2023)</h3>
-          <p class="card-summary" data-summary></p>
+      <figure class="figure story-viz">
+        <div class="card">
+          <div class="chart chart--map" data-chart="increase_map"></div>
+        </div>
+        <figcaption class="figure-caption">
+          <span class="figure-title">Median Rent Price Increases per PLR (2013–2023)</span>
         </figcaption>
-        <div class="chart chart--map" data-chart="increase_map"></div>
       </figure>
     </div>
 
     <section class="block">
       <h2 class="statement">All districts saw rent increases of over 60% since 2013, while the share of high-end listings has surged to 31% citywide.</h2>
       <div class="duo">
-        <figure class="card">
-          <figcaption class="card-head">
-            <h3 class="card-title">Median Rent Price Increases per District 2013 vs 2023</h3>
-            <p class="card-summary" data-summary></p>
+        <figure class="figure">
+          <div class="card">
+            <div class="chart chart--rows" data-chart="district_bars"></div>
+          </div>
+          <figcaption class="figure-caption">
+            <span class="figure-title">Median Rent Price Increases per District 2013 vs 2023</span>
           </figcaption>
-          <div class="chart chart--rows" data-chart="district_bars"></div>
         </figure>
-        <figure class="card">
-          <figcaption class="card-head">
-            <h3 class="card-title">Rental Market Segmentation 2023</h3>
-            <p class="card-summary" data-summary></p>
+        <figure class="figure">
+          <div class="card">
+            <div class="chart chart--rows" data-chart="segmentation"></div>
+          </div>
+          <figcaption class="figure-caption">
+            <span class="figure-title">Rental Market Segmentation 2023</span>
           </figcaption>
-          <div class="chart chart--rows" data-chart="segmentation"></div>
         </figure>
       </div>
     </section>
@@ -248,19 +268,20 @@
         <p class="caption">* Based on residents registered through the population registration system.</p>
         <p class="caption">* In Reinickendorf and Tempelhof-Schöneberg, special effects are present due to initial reception centers for asylum seekers.</p>
       </div>
-      <figure class="card story-viz">
-        <figcaption class="card-head">
-          <h3 class="card-title">Population Growth and Net Migration</h3>
-          <p class="card-summary" data-summary aria-live="polite"></p>
+      <figure class="figure story-viz">
+        <div class="card">
+          <label class="popup">
+            <span>Choose a district</span>
+            <span class="popup-control">
+              <select data-options="pop_migration_options" data-controls="pop_migration"></select>
+              <svg class="icon" aria-hidden="true"><use href="#i-chevrons-up-down"/></svg>
+            </span>
+          </label>
+          <div class="chart chart--panels" data-chart="pop_migration"></div>
+        </div>
+        <figcaption class="figure-caption">
+          <span class="figure-title">Population Growth and Net Migration</span>
         </figcaption>
-        <label class="popup">
-          <span>Choose a district</span>
-          <span class="popup-control">
-            <select data-options="pop_migration_options" data-controls="pop_migration"></select>
-            <svg class="icon" aria-hidden="true"><use href="#i-chevrons-up-down"/></svg>
-          </span>
-        </label>
-        <div class="chart chart--panels" data-chart="pop_migration"></div>
       </figure>
     </div>
 
@@ -268,19 +289,21 @@
       <h2 class="statement">While rent prices increased, so did incomes — particularly among those in the middle and upper brackets.</h2>
       <p class="caption">* The income increases are not adjusted to inflation.</p>
       <div class="duo">
-        <figure class="card">
-          <figcaption class="card-head">
-            <h3 class="card-title">Average Net Household Income per Inhabitant since 1991</h3>
-            <p class="card-summary" data-summary></p>
+        <figure class="figure">
+          <div class="card">
+            <div class="chart chart--rows" data-chart="income_line"></div>
+          </div>
+          <figcaption class="figure-caption">
+            <span class="figure-title">Average Net Household Income per Inhabitant since 1991</span>
           </figcaption>
-          <div class="chart chart--rows" data-chart="income_line"></div>
         </figure>
-        <figure class="card">
-          <figcaption class="card-head">
-            <h3 class="card-title">Income Brackets Evolution % (2013–2023)</h3>
-            <p class="card-summary" data-summary></p>
+        <figure class="figure">
+          <div class="card">
+            <div class="chart chart--rows" data-chart="income_stack"></div>
+          </div>
+          <figcaption class="figure-caption">
+            <span class="figure-title">Income Brackets Evolution % (2013–2023)</span>
           </figcaption>
-          <div class="chart chart--rows" data-chart="income_stack"></div>
         </figure>
       </div>
     </section>
@@ -296,12 +319,13 @@
         <p>This is still without accounting for housing expenses and heating.</p>
         <p>Despite a slight dip during the pandemic, the rent burden continues to climb.</p>
       </div>
-      <figure class="card story-viz">
-        <figcaption class="card-head">
-          <h3 class="card-title">Median Monthly Disposable Income vs Median Rent</h3>
-          <p class="card-summary" data-summary></p>
+      <figure class="figure story-viz">
+        <div class="card">
+          <div class="chart chart--panels" data-chart="burden_line"></div>
+        </div>
+        <figcaption class="figure-caption">
+          <span class="figure-title">Median Monthly Disposable Income vs Median Rent</span>
         </figcaption>
-        <div class="chart chart--panels" data-chart="burden_line"></div>
       </figure>
     </div>
 
@@ -309,25 +333,24 @@
       <div class="story-text">
         <h2>There are <span data-kpi="median.affordable">232</span> PLRs where a 1-room apartment would be considered affordable for the median income earner.</h2>
         <p>Central areas have become increasingly unaffordable, with certain exceptions to be analysed in detail.</p>
-        <figure class="card card--inset">
-          <figcaption class="card-head">
-            <h3 class="card-title">Planning Areas by Rent Burden</h3>
-            <p class="card-summary" data-summary></p>
-          </figcaption>
-          <div class="chart chart--bins" data-chart="median_bins"></div>
+        <figure class="figure figure--inset" aria-label="Planning Areas by Rent Burden">
+          <div class="card">
+            <div class="chart chart--bins" data-chart="median_bins"></div>
+          </div>
         </figure>
         <h3 class="assumptions-title">Assumptions</h3>
-        <ul>
+        <ul class="assumptions">
           <li>Average median available income 2023: 2031 €/month.</li>
           <li>Size 1-room apartment: 50 m².</li>
         </ul>
       </div>
-      <figure class="card story-viz">
-        <figcaption class="card-head">
-          <h3 class="card-title">Rent Burden by PLR 2023 (Median Income Earner, 1R Apartment)</h3>
-          <p class="card-summary" data-summary></p>
+      <figure class="figure story-viz">
+        <div class="card">
+          <div class="chart chart--map" data-chart="median_map"></div>
+        </div>
+        <figcaption class="figure-caption">
+          <span class="figure-title">Rent Burden by PLR 2023 (Median Income Earner, 1R Apartment)</span>
         </figcaption>
-        <div class="chart chart--map" data-chart="median_map"></div>
       </figure>
     </div>
 
@@ -335,15 +358,13 @@
       <div class="story-text">
         <h2>But only <span data-kpi="bg.affordable">33</span> for the Social Welfare recipient</h2>
         <p>The areas that are considered affordable are few and relayed to the outskirts.</p>
-        <figure class="card card--inset">
-          <figcaption class="card-head">
-            <h3 class="card-title">Planning Areas by Rent Burden</h3>
-            <p class="card-summary" data-summary></p>
-          </figcaption>
-          <div class="chart chart--bins" data-chart="bg_bins"></div>
+        <figure class="figure figure--inset" aria-label="Planning Areas by Rent Burden">
+          <div class="card">
+            <div class="chart chart--bins" data-chart="bg_bins"></div>
+          </div>
         </figure>
         <h3 class="assumptions-title">Assumptions (maximum monthly support, Berlin 2024–2026)</h3>
-        <ul>
+        <ul class="assumptions">
           <li>Monthly Allowance (Regelsatz): <span data-kpi="bg.allowance">563</span> €/month.</li>
           <li>Maximum coverage of gross cold rent for 1 person (AV-Wohnen): <span data-kpi="bg.rent_cap">449</span> €/month.</li>
           <li>Maximum heating and hot water costs for 1 person: <span data-kpi="bg.heating">133</span> €/month.</li>
@@ -351,12 +372,13 @@
           <li>Maximum 1-room-apartment size accepted: 50m².</li>
         </ul>
       </div>
-      <figure class="card story-viz">
-        <figcaption class="card-head">
-          <h3 class="card-title">Rent Burden by PLR 2023 (Social Welfare Recipient, 1R Apartment)</h3>
-          <p class="card-summary" data-summary></p>
+      <figure class="figure story-viz">
+        <div class="card">
+          <div class="chart chart--map" data-chart="bg_map"></div>
+        </div>
+        <figcaption class="figure-caption">
+          <span class="figure-title">Rent Burden by PLR 2023 (Social Welfare Recipient, 1R Apartment)</span>
         </figcaption>
-        <div class="chart chart--map" data-chart="bg_map"></div>
       </figure>
     </div>
   </section>
@@ -368,19 +390,21 @@
     <section class="block block--first">
       <h2 class="statement">Welfare recipients are concentrated in specific districts, and the number of WBS certificates issued has grown alongside rising rents — reflecting increasing pressure on the city’s affordable housing system.</h2>
       <div class="duo">
-        <figure class="card">
-          <figcaption class="card-head">
-            <h3 class="card-title">Proportion of Social Welfare Recipients by PGR (2022)</h3>
-            <p class="card-summary" data-summary></p>
+        <figure class="figure">
+          <div class="card">
+            <div class="chart chart--rows" data-chart="welfare_map"></div>
+          </div>
+          <figcaption class="figure-caption">
+            <span class="figure-title">Proportion of Social Welfare Recipients by PGR (2022)</span>
           </figcaption>
-          <div class="chart chart--rows" data-chart="welfare_map"></div>
         </figure>
-        <figure class="card">
-          <figcaption class="card-head">
-            <h3 class="card-title">WBS Recipients (2015–2024)</h3>
-            <p class="card-summary" data-summary></p>
+        <figure class="figure">
+          <div class="card">
+            <div class="chart chart--rows" data-chart="wbs"></div>
+          </div>
+          <figcaption class="figure-caption">
+            <span class="figure-title">WBS Recipients (2015–2024)</span>
           </figcaption>
-          <div class="chart chart--rows" data-chart="wbs"></div>
         </figure>
       </div>
     </section>
@@ -388,19 +412,21 @@
     <section class="block">
       <h2 class="statement">The distribution of subsidized housing only partially aligns with areas of greatest need, and with a 58% decline in units since 2015, the shrinking supply deepens spatial inequality in housing access.</h2>
       <div class="duo">
-        <figure class="card">
-          <figcaption class="card-head">
-            <h3 class="card-title">Proportion of Subsidized Housing by PGR (2022)</h3>
-            <p class="card-summary" data-summary></p>
+        <figure class="figure">
+          <div class="card">
+            <div class="chart chart--rows" data-chart="subsidized_map"></div>
+          </div>
+          <figcaption class="figure-caption">
+            <span class="figure-title">Proportion of Subsidized Housing by PGR (2022)</span>
           </figcaption>
-          <div class="chart chart--rows" data-chart="subsidized_map"></div>
         </figure>
-        <figure class="card">
-          <figcaption class="card-head">
-            <h3 class="card-title">Total Subsidized Units (2015-2024)</h3>
-            <p class="card-summary" data-summary></p>
+        <figure class="figure">
+          <div class="card">
+            <div class="chart chart--rows" data-chart="subsidized_bars"></div>
+          </div>
+          <figcaption class="figure-caption">
+            <span class="figure-title">Total Subsidized Units (2015-2024)</span>
           </figcaption>
-          <div class="chart chart--rows" data-chart="subsidized_bars"></div>
         </figure>
       </div>
     </section>
@@ -410,12 +436,13 @@
         <h2>New construction by public housing companies falls short of demand.</h2>
         <p>Too few units are subjected to rent and access controls — widening the gap between housing need and available support.</p>
       </div>
-      <figure class="card story-viz">
-        <figcaption class="card-head">
-          <h3 class="card-title">New Units by Public Housing Companies and % Subsidized</h3>
-          <p class="card-summary" data-summary></p>
+      <figure class="figure story-viz">
+        <div class="card">
+          <div class="chart chart--rows" data-chart="new_units"></div>
+        </div>
+        <figcaption class="figure-caption">
+          <span class="figure-title">New Units by Public Housing Companies and % Subsidized</span>
         </figcaption>
-        <div class="chart chart--rows" data-chart="new_units"></div>
       </figure>
     </div>
   </section>
@@ -424,7 +451,7 @@
   <section id="panel-outlook" class="panel" role="tabpanel" aria-labelledby="tab-outlook" tabindex="-1" hidden>
     <h1>Key Takeaways</h1>
 
-    <ol class="list takeaways">
+    <ol class="takeaways">
       <li><span class="num" aria-hidden="true">1</span><p><strong>Berlin rents have surged</strong>, increasing by 80% on average, and more than <strong>doubling in 129 areas</strong> since 2013.</p></li>
       <li><span class="num" aria-hidden="true">2</span><p><strong>Incomes have grown – but rents have grown faster.</strong> The average rent burden now sits at 34% citywide.</p></li>
       <li><span class="num" aria-hidden="true">3</span><p><strong>Affordability varies depending on income:</strong> Only <span data-kpi="median.share">43%</span> of planning areas are affordable for <strong>median earners</strong>. For <strong>Bürgergeld recipients</strong>, that drops to just <span data-kpi="bg.share">6.1%</span> of the city.</p></li>
@@ -460,11 +487,10 @@
           </div>
         </div>
       </div>
-      <figure class="card story-viz">
-        <figcaption class="card-head">
-          <h3 class="card-title">Rent Burden by PLR 2023 for Your Income</h3>
-        </figcaption>
-        <div class="chart chart--map" data-chart="your_rent"></div>
+      <figure class="figure story-viz" aria-label="Rent Burden by PLR 2023 for Your Income">
+        <div class="card">
+          <div class="chart chart--map" data-chart="your_rent"></div>
+        </div>
       </figure>
     </div>
 

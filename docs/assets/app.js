@@ -161,6 +161,12 @@
     const compact = el.clientWidth < COMPACT_WIDTH;
 
     if (compact) adaptToCompact(fig, el);
+    // The hovered row or column is shaded instead (see setupHoverBand)
+    if (!layout.map) {
+      for (const key of Object.keys(layout)) if (/^[xy]axis\d*$/.test(key)) layout[key].showspikes = false;
+    }
+    // Charts keep room at the top for their toolbar; without one they don't need it
+    if (!hasToolbar(el, Boolean(layout.map)) && layout.margin?.t > 20) layout.margin.t = 20;
     // Without a precise pointer, dragging on a chart has to scroll the page instead
     if (!layout.map && (compact || coarsePointer.matches)) layout.dragmode = false;
 
@@ -210,11 +216,13 @@
     click: (gd) => (document.fullscreenElement ? document.exitFullscreen() : gd.requestFullscreen()),
   };
 
+  // Small summary charts are labelled directly and need no tools. On touch, only maps
+  // need the toolbar, for its zoom buttons: tapping a chart shows its values.
+  const hasToolbar = (el, isMap) => !el.classList.contains("chart--bins") && (isMap || !coarsePointer.matches);
+
   function plotConfig(el, isMap) {
-    // Small summary charts are labelled directly and need no tools. On touch, only maps
-    // need the toolbar, for its zoom buttons: tapping a chart shows its values.
     const touch = coarsePointer.matches;
-    if (el.classList.contains("chart--bins") || (touch && !isMap)) return { displayModeBar: false, responsive: true };
+    if (!hasToolbar(el, isMap)) return { displayModeBar: false, responsive: true };
     return {
       displayModeBar: touch ? true : "hover",
       displaylogo: false,
@@ -240,27 +248,28 @@
     const fig = await prepareFigure(source, el);
     await Plotly.react(el, { data: fig.data, layout: fig.layout, frames: fig.frames || [], config: plotConfig(el, Boolean(fig.layout.map)) });
 
-    const card = el.closest(".card");
-    if (card) {
-      const summary = card.querySelector("[data-summary]");
-      if (summary && source.summary !== undefined) summary.textContent = source.summary;
-      if (source.legend) renderLegend(card, el, source);
-    }
+    // Captions show only the chart title; the summary of what the chart shows is its accessible label.
+    // The first and last maps have no caption, only a label on the figure.
+    const figure = el.closest("figure");
+    if (figure && source.legend) renderLegend(figure, el, source);
+    const title = figure?.querySelector(".figure-title")?.textContent || figure?.getAttribute("aria-label");
     el.setAttribute("role", "group");
-    el.setAttribute("aria-label", source.summary || card?.querySelector(".card-title")?.textContent || "Chart");
+    el.setAttribute("aria-label", source.summary || title || "Chart");
+    if (!fig.layout.map) setupHoverBand(el);
 
     // Touch: one finger scrolls the page, two fingers move the map
     if (coarsePointer.matches) el._fullLayout.map?._subplot?.map?.cooperativeGestures?.enable();
     el.__afterDraw?.();
   }
 
-  function renderLegend(card, el, source) {
+  // The colour scale sits under its map
+  function renderLegend(figure, el, source) {
     const { legend, scale } = source;
-    let box = card.querySelector(".scale-legend");
+    let box = figure.querySelector(".scale-legend");
     if (!box) {
       box = document.createElement("div");
       box.className = "scale-legend";
-      (el.closest(".chart-frame") || el).before(box);
+      (el.closest(".chart-frame") || el).after(box);
     }
     const position = (v) => ((v - legend.min) / (legend.max - legend.min)) * 100;
 
@@ -293,6 +302,43 @@
       note.textContent = legend.note;
       box.append(note);
     }
+  }
+
+  // Hovering a chart with a shared hover label shades the whole column or row under the pointer,
+  // in place of Plotly's dotted spike line. The band sits under bars and lines, and over stacked
+  // areas, which would hide it. A row's band also runs under its label.
+  function setupHoverBand(el) {
+    if (el.__hoverBand) return;
+    el.__hoverBand = true;
+    let band = null;
+    const clear = () => { band?.remove(); band = null; };
+
+    el.on("plotly_hover", (event) => {
+      clear();
+      const full = el._fullLayout;
+      const point = event.points?.[0];
+      if (!point || !full.hovermode?.endsWith(" unified")) return;
+      const letter = full.hovermode[0];
+      const along = point[`${letter}axis`];
+      const across = point[`${letter === "x" ? "y" : "x"}axis`];
+      const c = along.d2c(point[letter]);
+      const ends = [c - 0.5, c + 0.5].map((v) => along._offset + along.c2p(v));
+      const start = Math.max(Math.min(...ends), along._offset);
+      const end = Math.min(Math.max(...ends), along._offset + along._length);
+      const box = letter === "x"
+        ? { x: start, width: end - start, y: across._offset, height: across._length }
+        : { y: start, height: end - start, x: 0, width: full.width };
+      band = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      for (const [name, value] of Object.entries(box)) band.setAttribute(name, value);
+      band.setAttribute("fill", token("--highlight"));
+      band.setAttribute("class", "hover-band");
+      band.style.pointerEvents = "none";
+      const covered = el._fullData.some((trace) => trace.stackgroup);
+      (covered ? full._shapeUpperLayer : full._shapeLowerLayer).node().append(band);
+    });
+    el.on("plotly_unhover", clear);
+    el.on("plotly_relayout", clear);
+    el.on("plotly_afterplot", clear);
   }
 
   function setState(el, state, message = "") {

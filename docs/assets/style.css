@@ -24,6 +24,7 @@
   --map-line: rgba(60, 60, 67, 0.38);
   --map-outline: rgba(28, 28, 30, 0.72);
   --map-opacity: 0.85;
+  --highlight: rgba(120, 120, 128, 0.16);
 
   --radius: 1.25rem;
   --radius-control: 0.75rem;
@@ -45,6 +46,7 @@
     --map-line: rgba(0, 0, 0, 0.6);
     --map-outline: #000000;
     --map-opacity: 1;
+    --highlight: rgba(60, 60, 67, 0.22);
   }
 }
 
@@ -92,25 +94,27 @@ h1 { font-size: 2rem; line-height: 1.2059; letter-spacing: 0.012em; font-weight:
 h2 { font-size: 1.294rem; line-height: 1.2727; letter-spacing: -0.012em; font-weight: 700; }
 
 /* The main statement of each section: Title 1 in compact widths, Large Title in regular widths */
-.story-text h2, .statement, .lede {
+.story-text h2, .statement {
   font-size: 1.647rem;
   line-height: 1.2143;
   letter-spacing: 0.014em;
   font-weight: 700;
 }
-.statement, .lede { max-width: 50rem; }
+.statement { max-width: 50rem; }
+.lede { max-width: 50rem; font-size: 1.294rem; line-height: 1.2727; letter-spacing: -0.012em; font-weight: 400; }
 
 .subtitle { font-size: 1.176rem; line-height: 1.25; letter-spacing: -0.023em; color: var(--label-2); }
 
-/* Chart titles: Subhead, a step below Body */
-.card-title {
-  font-size: 0.882rem;
-  line-height: 1.3333;
-  letter-spacing: -0.016em;
-  font-weight: 600;
-}
-.assumptions-title, .list-title { font-size: 1rem; line-height: 1.2941; letter-spacing: -0.026em; font-weight: 600; }
-.caption, .card-summary, .stat-label, .scale-note {
+/* Chart captions sit under each card: the title in Subhead */
+.figure-caption { margin-top: 0.625rem; padding-inline: 0.5rem; }
+.figure-title { font-size: 0.882rem; line-height: 1.3333; letter-spacing: -0.016em; font-weight: 600; }
+.list-title { font-size: 1rem; line-height: 1.2941; letter-spacing: -0.026em; font-weight: 600; }
+/* Assumptions under the rent-burden charts: Subhead title, Footnote list */
+.assumptions-title { font-size: 0.882rem; line-height: 1.3333; letter-spacing: -0.016em; font-weight: 600; }
+.story-text .assumptions { font-size: 0.765rem; line-height: 1.3846; letter-spacing: -0.006em; color: var(--label-2); }
+.story-text .assumptions-title { margin-top: 1.25rem; }
+.story-text .assumptions { margin-top: 0.375rem; }
+.caption, .stat-label, .scale-note {
   font-size: 0.765rem; line-height: 1.3846; letter-spacing: -0.006em; color: var(--label-2);
 }
 .measure, .story-text p, .story-text ul { max-width: 38rem; }
@@ -133,16 +137,21 @@ h2 { font-size: 1.294rem; line-height: 1.2727; letter-spacing: -0.012em; font-we
 .story { display: grid; gap: 1.5rem; }
 .story-text > * + * { margin-top: 0.75rem; }
 .story-hero > * + * { margin-top: 0.25rem; }
-.story-text .card { margin-top: 1.5rem; }
+.story-text .figure { margin-top: 1.5rem; }
 .story-text ul { padding-left: 1.25rem; }
-.story-text ul li + li, .disclosure-body li + li { margin-top: 0.25rem; }
+.story-text ul li + li { margin-top: 0.25rem; }
 .story-viz { min-width: 0; }
 
-/* Opening section: in compact widths the map and its Play button come straight after the title */
+/* Opening section: the title runs across the top, with the map and its Play button straight under it */
 .story--lead { grid-template-areas: "hero" "viz" "text"; }
 .story--lead .story-hero { grid-area: hero; }
 .story--lead .story-text { grid-area: text; }
 .story--lead .story-viz { grid-area: viz; }
+/* The opening question sits a clear step below the site title: Title 2 on phones, Title 1 on wider screens */
+.story--lead .story-text h2 { font-size: 1.294rem; line-height: 1.2727; letter-spacing: -0.012em; }
+@container page (min-width: 52rem) {
+  .story--lead .story-text h2 { font-size: 1.647rem; line-height: 1.2143; letter-spacing: 0.014em; }
+}
 
 .block > * + * { margin-top: 1rem; }
 .duo, .trio { display: grid; gap: 1rem; }
@@ -156,8 +165,7 @@ h2 { font-size: 1.294rem; line-height: 1.2727; letter-spacing: -0.012em; font-we
     align-items: start;
   }
   .story--lead {
-    grid-template-areas: "hero viz" "text viz";
-    grid-template-rows: auto 1fr;
+    grid-template-areas: "hero hero" "text viz";
     row-gap: 1.5rem;
   }
   .story-text h2, .statement {
@@ -251,10 +259,16 @@ h2 { font-size: 1.294rem; line-height: 1.2727; letter-spacing: -0.012em; font-we
 }
 .card > * { margin-inline: var(--card-pad); }
 .card > .chart--map, .card > .chart-frame, .card > [data-chart$="_map"] { margin-inline: 0; }
-.card:has(> .chart--map, > .chart-frame, > [data-chart$="_map"]) { padding-bottom: 0; }
-.card-head > * + * { margin-top: 0.25rem; }
 .card > .chart, .card > .chart-frame { margin-top: 0.75rem; }
 .card > .scale-legend, .card > .popup { margin-top: 0.75rem; }
+.card > :first-child { margin-top: 0; }
+/* A map that opens its card runs to the top edge */
+.card > .chart--map:first-child, .card > [data-chart$="_map"]:first-child { margin-top: calc(-1 * var(--card-pad)); }
+
+/* Cards side by side keep equal heights, so their captions line up */
+.figure { display: flex; flex-direction: column; min-width: 0; }
+.figure > .card { flex: 1 0 auto; display: flex; flex-direction: column; }
+.figure > .card > .chart { flex: 1 0 auto; }
 
 .chart { position: relative; min-width: 0; }
 .chart--map { height: clamp(20rem, 104cqw, 30rem); }
@@ -301,7 +315,7 @@ h2 { font-size: 1.294rem; line-height: 1.2727; letter-spacing: -0.012em; font-we
   pointer-events: none;
 }
 
-/* Colour scale above each map */
+/* Colour scale under each map */
 .scale-legend > * + * { margin-top: 0.25rem; }
 .scale-title { font-size: 0.765rem; line-height: 1.3846; letter-spacing: -0.006em; font-weight: 600; }
 .scale-bar { height: 0.5rem; border-radius: 0.25rem; }
@@ -436,7 +450,7 @@ input[type="range"]::-moz-range-thumb {
   font-variant-numeric: tabular-nums;
 }
 
-.timeline { display: flex; align-items: flex-start; gap: 0.75rem; margin-top: 0.75rem; }
+.timeline { display: flex; align-items: flex-start; gap: 0.75rem; }
 .timeline-track { flex: 1; min-width: 0; }
 .round-button {
   flex: none;
@@ -517,7 +531,8 @@ input[type="range"]::-moz-range-thumb {
 .stat-name { margin-top: 0.125rem; font-size: 0.882rem; line-height: 1.3333; letter-spacing: -0.016em; font-weight: 600; }
 
 .list { list-style: none; border-radius: var(--radius); background: var(--surface); overflow: hidden; }
-.list > * + * { box-shadow: inset 0 0.5px 0 var(--separator); }
+/* Hairline separators: a 0.5px border always draws one device pixel, unlike a half-pixel shadow */
+.list > * + * { border-top: 0.5px solid var(--separator); }
 
 .num {
   flex: none;
@@ -533,11 +548,27 @@ input[type="range"]::-moz-range-thumb {
   font-weight: 700;
 }
 
-.question { display: flex; gap: 0.75rem; align-items: flex-start; padding: var(--card-pad); }
+.question {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 11rem;
+  padding: 1.5rem;
+}
 .question > * { margin-inline: 0; }
-.question-text { font-size: 1.176rem; line-height: 1.25; letter-spacing: -0.023em; font-weight: 600; }
+.question .num { width: 2.5rem; height: 2.5rem; font-size: 1.176rem; }
+.question-text { font-size: 1.294rem; line-height: 1.2727; letter-spacing: -0.012em; font-weight: 700; }
 
-.takeaways li { display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.875rem 1rem; }
+.takeaways { list-style: none; display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+.takeaways li {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1.25rem;
+  border-radius: var(--radius);
+  background: var(--surface);
+}
 .takeaways p { min-width: 0; max-width: 50rem; font-size: 1.176rem; line-height: 1.25; letter-spacing: -0.023em; }
 .takeaways strong { font-weight: 700; }
 
@@ -568,44 +599,64 @@ input[type="range"]::-moz-range-thumb {
 .links a:hover { background: var(--fill); }
 .links a:focus-visible { outline-offset: -2px; }
 
-/* Disclosure triangle on the leading edge: points inward when closed, down when open */
-.disclosure summary {
+/* Definitions: each one open in its own card. The disclosure triangle sits on the leading
+   edge, pointing inward when closed and down when open. */
+.definitions { display: grid; gap: 1rem; }
+.definition { padding: 0; }
+.definition > * { margin-inline: 0; }
+.definition summary {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   min-height: 44px;
-  padding: 0.625rem 1rem;
+  padding: 0.75rem 1.25rem 0.25rem;
   cursor: pointer;
   list-style: none;
+  font-size: 0.882rem;
+  line-height: 1.3333;
+  letter-spacing: -0.016em;
   font-weight: 600;
+  color: var(--label-2);
 }
-.disclosure summary::-webkit-details-marker { display: none; }
-.disclosure summary:focus-visible { outline-offset: -2px; }
-.disclosure-mark { color: var(--label-2); transition: transform 0.2s ease; }
+.definition summary::-webkit-details-marker { display: none; }
+.definition summary:focus-visible { outline-offset: -2px; }
+.disclosure-mark { transition: transform 0.2s ease; }
 details[open] > summary .disclosure-mark { transform: rotate(90deg); }
-.disclosure-body { padding: 0.125rem 1rem 1rem 2.5rem; }
-.disclosure-body > * + *, .disclosure-body > div > * + * { margin-top: 0.75rem; }
-.disclosure-body.duo > * + * { margin-top: 0; }
-.disclosure-body ul { padding-left: 1.25rem; }
-.disclosure-body p { max-width: 42rem; }
+.definition-body { display: grid; gap: 1rem; padding: 0.5rem 1.25rem 1.75rem; }
+.definition-title { font-size: 1.294rem; line-height: 1.2727; letter-spacing: -0.012em; font-weight: 700; }
+.definition-text, .definition-aside { line-height: 1.4118; }
+.definition-text > * + *, .definition-aside > * + * { margin-top: 0.625rem; }
+.definition ul { padding-left: 1.25rem; }
+.definition li + li { margin-top: 0.25rem; }
+.definition p { max-width: 42rem; }
 
-.formula {
-  display: grid;
-  place-items: center;
-  padding: 1rem;
-  border-radius: var(--radius-control);
-  background: var(--fill);
-  font-size: 1.176rem;
-}
+.formula { display: grid; justify-items: center; align-self: start; padding-block: 0.5rem; font-size: 1.294rem; }
 .formula math { font-family: var(--font); }
 
-.diagram { display: block; width: min(100%, 15rem); height: auto; border-radius: var(--radius-control); }
+.diagram { display: block; justify-self: center; width: 100%; max-width: 20rem; height: auto; }
+
+@container page (min-width: 52rem) {
+  .questions { gap: 1.25rem; }
+  .question { min-height: 17rem; padding: 2rem 1.75rem; }
+  .question-text { font-size: 1.647rem; line-height: 1.2143; letter-spacing: 0.014em; }
+  .definition summary { padding: 1rem 1.75rem 0.25rem; }
+  .definition-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) minmax(0, 1.2fr);
+    column-gap: 2.5rem;
+    min-height: 12rem;
+    padding: 0.75rem 1.75rem 2.5rem;
+  }
+  .definition-title { font-size: 1.647rem; line-height: 1.2143; letter-spacing: 0.014em; }
+  .definition-body:has(.diagram) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1.6fr); }
+  .diagram { max-width: 25rem; }
+  .takeaways li { padding: 1.5rem 1.75rem; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
 
 @media (forced-colors: active) {
-  .tabs, .card, .list { border: 1px solid CanvasText; }
+  .tabs, .card, .list, .takeaways li { border: 1px solid CanvasText; }
   .tabs [role="tab"][aria-selected="true"] { outline: 2px solid Highlight; }
 }
