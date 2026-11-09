@@ -26,8 +26,8 @@
   --map-opacity: 0.85;
   --highlight: rgba(120, 120, 128, 0.16);
 
-  --radius: 1.25rem;
-  --radius-control: 0.75rem;
+  --radius: 1rem;
+  --radius-control: 0.625rem;
   --card-pad: 1rem;
   --section: 3rem;
 }
@@ -188,7 +188,7 @@ h2 { font-size: 1.294rem; line-height: 1.2727; letter-spacing: -0.012em; font-we
   gap: 2px;
   margin: max(0.5rem, env(safe-area-inset-top)) max(0.5rem, env(safe-area-inset-right)) 0 max(0.5rem, env(safe-area-inset-left));
   padding: 4px;
-  border-radius: 2rem;
+  border-radius: 1.25rem;
   background: var(--surface);
   overflow-x: auto;
   scrollbar-width: none;
@@ -205,7 +205,7 @@ h2 { font-size: 1.294rem; line-height: 1.2727; letter-spacing: -0.012em; font-we
   min-width: 44px;
   min-height: 52px;
   padding: 4px 6px;
-  border-radius: 1.625rem;
+  border-radius: 1rem;
   color: var(--label-2);
   text-decoration: none;
   font-size: 0.647rem;      /* Caption 2, the HIG's 11pt minimum */
@@ -320,7 +320,7 @@ h2 { font-size: 1.294rem; line-height: 1.2727; letter-spacing: -0.012em; font-we
 /* Colour scale under each map */
 .scale-legend > * + * { margin-top: 0.25rem; }
 .scale-title { font-size: 0.765rem; line-height: 1.3846; letter-spacing: -0.006em; font-weight: 600; }
-.scale-bar { height: 0.5rem; border-radius: 0.25rem; }
+.scale-bar { height: 0.5rem; border-radius: 0.1875rem; }
 .scale-ticks { position: relative; height: 1.1rem; margin-top: 0.125rem; }
 .scale-ticks span {
   position: absolute;
@@ -343,7 +343,7 @@ body .js-plotly-plot .plotly .modebar { top: 0.5rem !important; right: 0.5rem !i
 body .js-plotly-plot .plotly .modebar-group {
   padding: 0 !important;
   margin-left: 0.25rem;
-  border-radius: 0.625rem;
+  border-radius: 0.5rem;
   background: rgba(255, 255, 255, 0.9) !important;
   box-shadow: 0 0 0 0.5px var(--separator);
 }
@@ -506,7 +506,7 @@ input[type="range"]::-moz-range-thumb {
   place-items: center;
   min-height: 44px;
   padding: 0.25rem;
-  border-radius: 0.625rem;
+  border-radius: 0.5rem;
   text-align: center;
   cursor: pointer;
   font-size: 0.765rem;
@@ -522,7 +522,7 @@ input[type="range"]::-moz-range-thumb {
 .segmented label:has(input:focus-visible) { outline: 2px solid var(--accent-ink); outline-offset: 1px; }
 
 .metric-value { margin-top: 0.125rem; font-size: 2rem; line-height: 1.2059; letter-spacing: 0.012em; font-weight: 700; }
-.meter { height: 0.5rem; margin-top: 0.5rem; border-radius: 0.25rem; background: var(--fill); overflow: hidden; }
+.meter { height: 0.5rem; margin-top: 0.5rem; border-radius: 0.1875rem; background: var(--fill); overflow: hidden; }
 .meter span { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--accent); }
 
 /* ---- STATS AND LISTS ---- */

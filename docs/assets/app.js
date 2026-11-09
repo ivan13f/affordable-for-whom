@@ -33,6 +33,10 @@
   };
 
   const token = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+  // Numbers are European style: ',' before decimals, '.' between thousands ("1.234,5")
+  const SEPARATORS = ",.";
+  const parseNumber = (text) => parseFloat(String(text).replace(/\./g, "").replace(",", ".").replace(/[^\d.-]/g, ""));
   const resolveColor = (color) => (TOKENS_BY_COLOR[color] ? token(TOKENS_BY_COLOR[color]) : color);
 
   function luminance(hex) {
@@ -131,7 +135,7 @@
       // Keep the first and last value labels on column charts. With an axis on both sides there's
       // no room at the ends, so double-axis charts label only the largest bar, unless it's the last.
       if (trace.type === "bar" && trace.orientation !== "h" && Array.isArray(trace.text)) {
-        const values = trace.text.map((t) => parseFloat(String(t).replace(/[,%]/g, "")));
+        const values = trace.text.map(parseNumber);
         const largest = values.indexOf(Math.max(...values.filter(Number.isFinite)));
         const keep = layout.yaxis2?.overlaying
           ? new Set(largest === values.length - 1 ? [] : [largest])
@@ -139,7 +143,7 @@
         trace.text = trace.text.map((t, i) => (keep.has(i) ? t : ""));
       }
       if (trace.orientation === "h" && Array.isArray(trace.text)) {
-        trace.text = trace.text.map((t) => String(t).replace(/^([\d.]+%) increase$/, "+$1"));
+        trace.text = trace.text.map((t) => String(t).replace(/^([\d.,]+%) increase$/, "+$1"));
       }
     }
 
@@ -150,7 +154,7 @@
     if (data[0]?.orientation === "h" && layout.barmode === "stack") {
       const plotWidth = el.clientWidth - 110;
       for (const a of layout.annotations || []) {
-        if ((parseFloat(a.text) / 100) * plotWidth < a.text.length * 7 + 4) a.visible = false;
+        if ((parseNumber(a.text) / 100) * plotWidth < a.text.length * 7 + 4) a.visible = false;
       }
     }
   }
@@ -196,6 +200,7 @@
     }
 
     layout.template = chartTemplate();
+    layout.separators = SEPARATORS;
     delete layout.height;
     layout.autosize = true;
 

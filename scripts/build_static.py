@@ -9,6 +9,7 @@ renders with Plotly.js in the browser. Re-run it only when the data changes:
     python scripts/build_static.py
 """
 import json
+import re
 from pathlib import Path
 
 import geopandas as gpd
@@ -125,6 +126,14 @@ TOTAL_PLRS = len(plr_geo)
 
 # ---- SERIALISATION ----
 
+# Numbers are written European style: '.' between thousands, ',' before decimals. Python formats
+# them the English way first; eu() swaps the two separators wherever they sit between digits.
+_SEPARATOR = re.compile(r"(?<=\d)[.,](?=\d)")
+
+
+def eu(text):
+    return _SEPARATOR.sub(lambda m: "," if m.group() == "." else ".", text) if isinstance(text, str) else text
+
 
 
 def fig_json(fig, geo=None, *, summary, scale=None, legend=None):
@@ -136,10 +145,20 @@ def fig_json(fig, geo=None, *, summary, scale=None, legend=None):
     for trace in d["data"] + [t for frame in d.get("frames", []) for t in frame.get("data", [])]:
         if "geojson" in trace:
             trace["geojson"] = geo
-    d["summary"] = summary
+        for key in ("name", "hovertemplate"):
+            if key in trace:
+                trace[key] = eu(trace[key])
+        if isinstance(trace.get("text"), list):
+            trace["text"] = [eu(t) for t in trace["text"]]
+    for annotation in d["layout"].get("annotations", []):
+        annotation["text"] = eu(annotation.get("text"))
+    d["summary"] = eu(summary)
     if scale:
         d["scale"] = scale
     if legend:
+        legend = {**legend, "ticks": [{**tick, "t": eu(tick["t"])} for tick in legend["ticks"]]}
+        if "note" in legend:
+            legend["note"] = eu(legend["note"])
         d["legend"] = legend
     if geo:
         d["fit"] = BERLIN_BOUNDS
@@ -165,6 +184,11 @@ MARGIN = dict(l=8, r=8, t=44, b=28)
 LEGEND = dict(orientation="h", x=0, xanchor="left", y=0, yanchor="bottom", yref="container", traceorder="normal")
 
 
+# Value axes write numbers in full with the European thousands point (2.500, 180.000, 3.500.000),
+# not Plotly's English "k" and "M" abbreviations. Year axes keep plain years (2013).
+VALUE_TICKS = dict(separatethousands=True, exponentformat="none")
+
+
 def x_years(dtick=1, **kwargs):
     return {**dict(tickmode="linear", dtick=dtick, showgrid=False, showline=True, linecolor=AXIS, ticks="",
                    zeroline=False), **kwargs}
@@ -172,12 +196,13 @@ def x_years(dtick=1, **kwargs):
 
 def y_values(**kwargs):
     """Value axis on the trailing side, so the plot keeps a clean leading edge."""
-    return {**dict(side="right", showgrid=True, gridcolor=GRID, gridwidth=1, showline=False, ticks="", zeroline=False),
+    return {**dict(side="right", showgrid=True, gridcolor=GRID, gridwidth=1, showline=False, ticks="", zeroline=False,
+                   **VALUE_TICKS),
             **kwargs}
 
 
 # Double-axis charts: an axis line on each side, as on the original charts
-SIDE_AXIS = dict(showgrid=False, showline=True, linecolor=AXIS, ticks="", zeroline=False)
+SIDE_AXIS = dict(showgrid=False, showline=True, linecolor=AXIS, ticks="", zeroline=False, **VALUE_TICKS)
 
 
 def value_chip(x, y, text, **kwargs):
@@ -244,7 +269,7 @@ def supply_rent_yoy(district):
     fig = go.Figure()
     fig.add_trace(go.Bar(
         x=yoy.index, y=yoy.values, name="Yearly Increase (%)", yaxis="y", offsetgroup=0,
-        marker=dict(color=ACCENT, cornerradius=4), text=[f"{v:.2f}%" if pd.notna(v) else "" for v in yoy],
+        marker=dict(color=ACCENT, cornerradius=3), text=[f"{v:.2f}%" if pd.notna(v) else "" for v in yoy],
         textposition="outside", constraintext="none", cliponaxis=False,
         textfont=dict(color=ACCENT_TEXT, size=13, weight="bold"),
         hovertemplate="Yearly increase: %{y:.2f}%<extra></extra>"))
@@ -287,8 +312,8 @@ def supply_increase_map():
     max_plr = named.loc[named["pct_increase"].idxmax()]
     min_plr = named.loc[named["pct_increase"].idxmin()]
     kpis = {
-        "max": {"value": f"{max_plr['pct_increase']:.1f}%".replace("-", "−"), "name": max_plr["plr_name"]},
-        "min": {"value": f"{min_plr['pct_increase']:.1f}%".replace("-", "−"), "name": min_plr["plr_name"]},
+        "max": {"value": eu(f"{max_plr['pct_increase']:.1f}%").replace("-", "−"), "name": max_plr["plr_name"]},
+        "min": {"value": eu(f"{min_plr['pct_increase']:.1f}%").replace("-", "−"), "name": min_plr["plr_name"]},
     }
     doubled = gdf["pct_increase"] >= 100
 
@@ -316,10 +341,10 @@ def supply_district_bars():
 
     fig = go.Figure()
     fig.add_trace(go.Bar(y=pivot["bez_name"], x=pivot["2013"], name="2013", orientation="h",
-                         marker=dict(color=NEUTRAL, cornerradius=4),
+                         marker=dict(color=NEUTRAL, cornerradius=3),
                          hovertemplate="2013: %{x:.2f} €/m²<extra></extra>"))
     fig.add_trace(go.Bar(y=pivot["bez_name"], x=pivot["2023"], name="2023", orientation="h",
-                         marker=dict(color=ACCENT, cornerradius=4), text=pivot["label"], textposition="outside",
+                         marker=dict(color=ACCENT, cornerradius=3), text=pivot["label"], textposition="outside",
                          constraintext="none", cliponaxis=False, textfont=dict(size=12, color=INK_2),
                          hovertemplate="2023: %{x:.2f} €/m²<extra></extra>"))
     fig.update_layout(
@@ -394,7 +419,7 @@ def demand_pop_migration(option):
         hovertemplate="Total population: %{y:,}<extra></extra>"))
     fig.add_trace(go.Bar(
         x=growth["year"], y=growth["net_migration"], base=0, name="Net Migration", yaxis="y2", width=0.5,
-        marker=dict(color=ACCENT, cornerradius=4), text=[f"{v:,}" for v in growth["net_migration"]],
+        marker=dict(color=ACCENT, cornerradius=3), text=[f"{v:,}" for v in growth["net_migration"]],
         textposition="outside", constraintext="none", cliponaxis=False,
         textfont=dict(color=ACCENT_TEXT, size=13, weight="bold"), hovertemplate="Net migration: %{y:,}<extra></extra>"))
     for i, anchor, shift in ([(0, "left", -10), (-1, "right", 10)] if len(growth) > 1 else [(0, "left", -10)]):
@@ -427,8 +452,8 @@ def demand_income_line():
         name="Monthly Net Income", line=dict(color=INK, width=2), marker=dict(size=8, color=INK, line=dict(color=PAPER, width=2)),
         hovertemplate="%{x}: %{y:.2f} €<extra></extra>"))
     fig.update_layout(margin=MARGIN, xaxis=x_years(dtick=4, tick0=int(first_year)), yaxis=y_values(rangemode="tozero", ticksuffix=" €"),
-                      annotations=[end_label(last_year, last_value, f"{last_value:.2f} €")], hovermode="closest")
-    return fig_json(fig, summary=f"{first_value:.2f} € per month in {first_year}, {last_value:.2f} € in {last_year}. "
+                      annotations=[end_label(last_year, last_value, f"{last_value:,.2f} €")], hovermode="closest")
+    return fig_json(fig, summary=f"{first_value:,.2f} € per month in {first_year}, {last_value:,.2f} € in {last_year}. "
                                  "Not adjusted for inflation.")
 
 
@@ -512,16 +537,16 @@ def affordability_kpis(df):
     """Numbers quoted in the Affordability and Outlook text, so the copy always matches the maps."""
     def affordable(column, decimals):
         count = int((df[column] <= AFFORDABLE).sum())
-        return {"affordable": str(count), "share": f"{count / TOTAL_PLRS * 100:.{decimals}f}%"}
+        return {"affordable": str(count), "share": eu(f"{count / TOTAL_PLRS * 100:.{decimals}f}%")}
 
     return {
         "median": affordable("rent_burden_median_income", 0),
         "bg": {
             **affordable("rent_burden_bg", 1),
-            "allowance": f"{BUERGERGELD['Bürgergeld (cash)']:,.0f}",
-            "rent_cap": f"{BUERGERGELD['Bruttokaltmiete cap (AV-Wohnen 1 person)']:,.0f}",
-            "heating": f"{BUERGERGELD['Heating/utilities (high)']:,.0f}",
-            "total": f"{INCOME_BUERGERGELD:,.0f}",
+            "allowance": eu(f"{BUERGERGELD['Bürgergeld (cash)']:,.0f}"),
+            "rent_cap": eu(f"{BUERGERGELD['Bruttokaltmiete cap (AV-Wohnen 1 person)']:,.0f}"),
+            "heating": eu(f"{BUERGERGELD['Heating/utilities (high)']:,.0f}"),
+            "total": eu(f"{INCOME_BUERGERGELD:,.0f}"),
         },
     }
 
@@ -592,7 +617,7 @@ def afford_bins(burden, include_lowest, who):
     fig = go.Figure(go.Bar(
         y=[r[0] for r in rows], x=[r[1] for r in rows], orientation="h", width=0.68, text=[str(r[1]) for r in rows],
         textposition="outside", constraintext="none", cliponaxis=False, textfont=dict(size=13, color=INK),
-        marker=dict(color=[r[2] for r in rows], colorscale=PLACEHOLDER_SCALE, cmin=0, cmax=0.6, cornerradius=4),
+        marker=dict(color=[r[2] for r in rows], colorscale=PLACEHOLDER_SCALE, cmin=0, cmax=0.6, cornerradius=3),
         hovertemplate="%{y}: %{x} PLRs<extra></extra>"))
     fig.update_layout(
         margin=dict(l=8, r=8, t=4, b=4), hovermode="closest",
@@ -658,7 +683,7 @@ def social_wbs():
 def social_subsidized():
     fig = go.Figure(go.Bar(
         x=subsidies["year"], y=subsidies["subsidized_housing"], width=0.5, name="New Subsidized Housing",
-        marker=dict(color=ACCENT, cornerradius=4), text=[f"{v:,}" for v in subsidies["subsidized_housing"]],
+        marker=dict(color=ACCENT, cornerradius=3), text=[f"{v:,}" for v in subsidies["subsidized_housing"]],
         textposition="outside", constraintext="none", cliponaxis=False, textfont=dict(size=12, color=INK_2),
         hovertemplate="%{x}: %{y:,} units<extra></extra>"))
     fig.update_layout(margin=MARGIN, xaxis=x_years(tick0=2015), yaxis=y_values(), showlegend=False,
